@@ -1,5 +1,5 @@
 /* PandaUI: cache only application files; never erase dose storage. */
-const PREFIX='pandaui-shell-',CACHE=PREFIX+'1.2.2-1';
+const PREFIX='pandaui-shell-',CACHE=PREFIX+'1.2.3-1';
 const FILES=['./','./index.html','./manifest.webmanifest','./icon.svg','./icon-180.png','./icon-192.png','./icon-512.png'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)))});
 self.addEventListener('activate',event=>{event.waitUntil((async()=>{for(const key of await caches.keys())if(key.startsWith(PREFIX)&&key!==CACHE)await caches.delete(key);await self.clients.claim()})())});

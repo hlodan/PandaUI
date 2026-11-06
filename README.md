@@ -1,4 +1,4 @@
-# PandaUI 1.2.2
+# PandaUI 1.2.3
 
 Osobní deník s přehledy spotřeby a nákladů, upravený pro iPhone.
 
