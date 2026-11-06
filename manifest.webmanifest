@@ -1,0 +1,26 @@
+{
+  "id": "./",
+  "name": "PandaUI",
+  "short_name": "PandaUI",
+  "description": "Osobní deník spotřeby a nákladů",
+  "lang": "cs",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f5f0",
+  "theme_color": "#34745b",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
