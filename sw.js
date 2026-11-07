@@ -1,7 +1,7 @@
 /* PandaUI: cache only application files; never erase dose storage. */
-const PREFIX='pandaui-shell-',CACHE=PREFIX+'1.3.0-1';
-const FILES=['./','./index.html','./manifest.webmanifest','./icon.svg','./icon-180.png','./icon-192.png','./icon-512.png'];
-self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES)))});
+const PREFIX='pandaui-shell-',CACHE=PREFIX+'2.0.0-1';
+const FILES=['./','./index.html','./manifest.webmanifest','./icon.svg','./icon-180.png','./icon-192.png','./icon-512.png','./assets/app.css','./assets/widgets.css','./assets/ios.css','./assets/core.js','./assets/widgets.js'];
+self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(async cache=>{await cache.addAll(FILES);await self.skipWaiting()}))});
 self.addEventListener('activate',event=>{event.waitUntil((async()=>{for(const key of await caches.keys())if(key.startsWith(PREFIX)&&key!==CACHE)await caches.delete(key);await self.clients.claim()})())});
 self.addEventListener('fetch',event=>{const url=new URL(event.request.url);if(event.request.method!=='GET'||url.origin!==self.location.origin||!url.href.startsWith(self.registration.scope))return;
  const known=FILES.some(path=>new URL(path,self.registration.scope).pathname===url.pathname);if(!known&&event.request.mode!=='navigate')return;
