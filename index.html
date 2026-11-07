@@ -184,7 +184,7 @@ input[type=datetime-local]{-webkit-appearance:none;appearance:none}
 
 .pwa-state{text-align:center;color:var(--mute);font-size:12px;line-height:1.6;margin:18px 12px 8px}
 
-/* PandaUI 1.2.3 — round iOS surfaces inspired by the original prototype. */
+/* PandaUI 1.3.0 — round iOS surfaces inspired by the original prototype. */
 :root{--bg:#f2f2f7;--acc:#248a3d;--acc2:rgba(36,138,61,.11)}
 html,body{overscroll-behavior-y:none;touch-action:pan-x pan-y}body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;caret-color:transparent;cursor:default;padding-top:0}
 input,textarea,[contenteditable=true]{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default;caret-color:var(--acc);cursor:text}
@@ -211,26 +211,38 @@ input,select,textarea{appearance:none;-webkit-appearance:none}input::-webkit-inn
 @media(max-width:360px){.appbar-inner{padding-left:12px;padding-right:12px}.appbar-name{font-size:16px}.quick-card,.recent-card{padding:15px}.quick-heading{gap:5px}.quick-heading h2{font-size:11px}.time-pill{font-size:9px;padding:5px 6px}.meal-options button{padding:9px 10px}.amount-display span{font-size:34px}.today-strip>div{padding:11px 9px}.today-strip strong{font-size:17px}.sh{padding-left:12px;padding-right:12px}}
 @media(prefers-reduced-motion:no-preference){button{transition:transform .12s,background .18s}button:active:not(:disabled){transform:scale(.97)}}
 
+
+/* 1.3.0: overview, personal purchases, graphs and settings. */
+[hidden]{display:none!important}.history-back{min-height:44px;margin-top:10px}.history-link,.balance-link{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;border:0;border-radius:17px;text-align:left;font:inherit;cursor:pointer}
+.history-link{padding:13px 15px;margin:0 0 12px;background:var(--card);color:var(--ink);font-size:13px;font-weight:600}.history-link>span:last-child{color:var(--acc);font-size:12px;font-weight:500}.balance-link{padding:14px 15px;margin:0 0 16px;background:var(--acc2);color:var(--acc)}.balance-link>span:first-child{display:flex;flex-direction:column;gap:5px;min-width:0}.balance-link strong{font-size:13px}.balance-link small{font-size:11px;line-height:1.5;opacity:.85}.page-badge{color:var(--mute);font-size:11px;border-radius:20px;padding:7px 10px;background:var(--card)}
+.quick-presets{grid-template-columns:repeat(auto-fit,minmax(44px,1fr))}.amount-stepper #quickExact{min-width:0;width:100%;max-width:160px;border:0;border-radius:12px;padding:4px;background:var(--bg);font:inherit;font-size:34px;font-weight:750;text-align:center;color:var(--ink)}
+.purchase-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.purchase-summary .stat{padding:15px}.purchase-summary .stat b{font-size:22px;color:var(--ink);margin-top:7px;overflow-wrap:anywhere}.purchase-summary .stat:first-child b{color:var(--acc)}.purchase-note{color:var(--mute);font-size:12px;line-height:1.6;margin:12px 2px 16px;overflow-wrap:anywhere}.shop-card{background:var(--card);border-radius:24px;padding:18px;margin:16px 0;box-shadow:0 3px 18px rgba(0,0,0,.04);min-width:0;scroll-margin-top:80px}
+.shop-label{color:var(--mute);font-size:12px;font-weight:600;margin:18px 0 10px}.package-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.package-options .chip{min-width:0;border-radius:12px;background:var(--bg);font-size:13px;padding:10px 0;color:var(--mute)}.package-options .chip[aria-pressed=true]{background:var(--acc2);color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc)}
+.shop-field{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:.5px solid var(--sep);padding:14px 0;min-width:0;font-size:13px}.shop-field>span{flex:1;min-width:0}.shop-field input{border:0;border-radius:11px;background:var(--bg);color:var(--ink);padding:10px 8px;min-height:42px;min-width:0;width:43%;max-width:155px;font:inherit;font-size:16px;text-align:right}.quantity-control{display:flex;align-items:center;gap:13px;flex:none}.quantity-control button{width:38px;height:38px;min-width:38px;border:0;border-radius:50%;background:var(--bg);color:var(--acc);font-size:23px;cursor:pointer}.quantity-control button:disabled{opacity:.3}.quantity-control output,.quantity-control span{font-size:16px;font-weight:650;min-width:20px;text-align:center;font-variant-numeric:tabular-nums}
+.cart-empty{text-align:center;color:var(--mute);font-size:13px;line-height:1.6;padding:18px 8px}.cart-line{padding:14px 0;border-bottom:.5px solid var(--sep)}.cart-line-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;min-width:0}.cart-line-top>div{display:flex;flex-direction:column;gap:6px;min-width:0}.cart-line-top strong{font-size:14px;overflow-wrap:anywhere}.cart-line-top small{color:var(--mute);font-size:11px;line-height:1.5}.cart-line-top b{color:var(--acc);font-size:15px;text-align:right;overflow-wrap:anywhere}.cart-line-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}.cart-line-controls .lk{font-size:12px;min-height:40px}.cart-total{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:20px 0 0;font-size:14px}.cart-total strong{font-size:26px;letter-spacing:-.6px;overflow-wrap:anywhere}.purchase-history-card{background:var(--card);border-radius:20px;padding:17px;margin-bottom:12px}.purchase-history-card p{color:var(--mute);font-size:12px;line-height:1.6;margin:12px 0}.purchase-history-actions{display:flex;justify-content:space-between;gap:12px;border-top:.5px solid var(--sep);padding-top:6px}.purchase-history-actions button{min-height:40px;font-size:13px}
+.preset-settings{padding:8px 0 18px}.preset-row{display:flex;align-items:center;gap:8px;margin:10px 0;min-width:0}.preset-row>button{flex:0 0 38px;width:38px;height:38px;border-radius:50%;border:0;background:var(--bg);color:var(--acc);font-size:22px;cursor:pointer}.preset-row>span{font-size:13px;color:var(--mute)}#p-more .preset-row>input{width:0;min-width:0;max-width:100%;flex:1;font:inherit;font-size:17px;text-align:center;padding:10px 3px;background:var(--bg);border:0;border-radius:12px;color:var(--ink)}.preset-row>button.preset-remove{background:transparent;color:var(--mute);flex-basis:30px;width:30px}.preset-row button:disabled{opacity:.25}.preset-add{display:flex;gap:8px;min-width:0;margin-top:16px}.preset-add input{width:0;min-width:0;flex:1;border:0;border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;font-size:16px;padding:12px 10px}.preset-add button{border:0;border-radius:12px;background:var(--acc2);color:var(--acc);padding:10px;font:inherit;font-size:13px;font-weight:650;white-space:nowrap}.preset-add button:disabled{opacity:.3}
+@media(max-width:360px){.shop-card{padding:15px}.shop-field input{width:46%}.purchase-summary .stat b{font-size:20px}.quantity-control{gap:10px}.preset-row{gap:6px}.preset-row>button{flex-basis:34px;width:34px;height:36px}.time-pill{white-space:normal}.page-badge{font-size:10px}.preset-add{flex-wrap:wrap}.preset-add input{flex-basis:120px}}
+
 </style>
 </head>
 <body>
-<header class="appbar"><div class="appbar-inner"><span class="version-pill">v1.2.3</span><div class="appbar-name"><img src="icon.svg" alt="" width="24" height="24"><span>PandaUI</span></div><span class="connection-pill" id="connectionState"><i></i><span>Online</span></span></div></header>
+<header class="appbar"><div class="appbar-inner"><span class="version-pill">v1.3.0</span><div class="appbar-name"><img src="icon.svg" alt="" width="24" height="24"><span>PandaUI</span></div><span class="connection-pill" id="connectionState"><i></i><span>Online</span></span></div></header>
 <main>
 
 <section class="page" id="p-log">
-<div class="top"><h1>Deník</h1><button class="plus" id="addD" aria-label="Přidat dávku">+</button></div>
+<button class="lk history-back" onclick="go('sum')">‹ Přehled</button><div class="top"><h1>Historie</h1><button class="plus" id="addD" aria-label="Přidat dávku">+</button></div>
 <div id="log"></div>
 </section>
 
 <section class="page" id="p-sum" hidden>
 <div class="top"><div class="home-heading"><h1>Přehled</h1></div><button class="plus" id="addH" aria-label="Přidat dávku">+</button></div>
 <p class="intro">Tvůj den na jednom místě.</p>
-<div class="today-strip" id="todayStrip"></div>
+<div class="today-strip" id="todayStrip"></div><button class="history-link" onclick="go('log')"><span>Historie dávek</span><span aria-hidden="true">Zobrazit vše ›</span></button><div id="homeBalance"></div>
 <div class="quick-card" id="quickCard">
 <div class="quick-heading"><h2>Zapsat dávku</h2><span class="time-pill" id="quickSince">Zatím bez záznamů</span></div>
 <label class="quick-strain"><span>Druh</span><select id="quickStrain" aria-label="Druh pro rychlý záznam"></select><span class="select-chevron" aria-hidden="true">⌄</span></label>
 <div class="quick-context"><span>Jídlo</span><div class="meal-options" role="group" aria-label="Souvislost s jídlem"><button id="quickEmpty" aria-pressed="false">Nalačno</button><button id="quickMeal" aria-pressed="false">Po jídle</button></div></div>
-<div class="amount-stepper"><button type="button" id="quickMinus" aria-label="Ubrat 0,5 gramu">−</button><button type="button" class="amount-display" id="quickAmount" aria-label="Zadat přesné množství"><span id="quickAmountText">0</span><small>g</small></button><button type="button" id="quickPlus" aria-label="Přidat 0,5 gramu">+</button></div>
+<div class="amount-stepper"><button type="button" id="quickMinus" aria-label="Ubrat 0,5 gramu">−</button><button type="button" class="amount-display" id="quickAmount" aria-label="Zadat přesné množství"><span id="quickAmountText">0</span><small>g</small></button><input id="quickExact" type="number" min="0.1" step="0.1" inputmode="decimal" aria-label="Přesné množství v gramech" hidden><button type="button" id="quickPlus" aria-label="Přidat 0,5 gramu">+</button></div>
 <div class="chips quick-presets" id="quickChips"></div>
 <p class="quick-estimate" id="quickEstimate">Vyber množství pomocí −/+ nebo rychlé volby.</p>
 <button class="primary-action" id="quickSave" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>Zapsat dávku</button>
@@ -254,6 +266,27 @@ input,select,textarea{appearance:none;-webkit-appearance:none}input::-webkit-inn
 <section class="page" id="p-str" hidden>
 <button class="lk" style="margin-top:24px" onclick="go('more')">← Nastavení</button><div class="top"><h1>Druhy</h1><button class="plus" id="addS" aria-label="Přidat druh">+</button></div>
 <div id="strains"></div>
+</section>
+
+<section class="page" id="p-buy" hidden>
+<div class="top"><h1>Nákup</h1><span class="page-badge">Moje evidence</span></div>
+<p class="intro">Tvoje balení a výdaje. Vlastní nákupní deník.</p>
+<div class="purchase-summary" id="purchaseSummary"></div>
+<p class="purchase-note" id="purchaseBalanceNote"></p>
+<div class="shop-card"><div class="quick-heading"><h2>Přidat balení</h2><span class="time-pill">1. Vyber · 2. Přidej</span></div>
+<label class="quick-strain"><span>Druh</span><select id="buyStrain" aria-label="Nakoupený druh"></select><span class="select-chevron" aria-hidden="true">⌄</span></label>
+<div class="shop-label">Velikost jednoho balení</div><div class="package-options" id="packageOptions"></div>
+<label class="shop-field"><span>Vlastní velikost (g)</span><input id="buySize" type="number" min="0.1" step="0.1" inputmode="decimal" value="50"></label>
+<label class="shop-field"><span>Cena za jedno balení (Kč)</span><input id="buyPrice" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Např. 125"></label>
+<div class="shop-field"><span>Počet balení</span><div class="quantity-control"><button id="buyQtyMinus" aria-label="Odebrat jedno balení">−</button><output id="buyQty">1</output><button id="buyQtyPlus" aria-label="Přidat jedno balení">+</button></div></div>
+<p class="purchase-note" id="buyPreview" aria-live="polite"></p>
+<button class="primary-action" id="buyAdd">＋ Přidat do nákupu</button>
+</div>
+<div class="shop-card" id="cartCard"><div class="quick-heading"><h2 id="cartTitle">Rozpracovaný nákup</h2><span class="time-pill" id="cartCount">0 balení</span></div><div id="cartLines"></div>
+<label class="shop-field"><span>Datum nákupu</span><input id="buyDate" type="date"></label>
+<div class="cart-total"><span>Celkem</span><strong id="cartTotal">0 Kč</strong></div><p class="purchase-note">Částky jsou za zadaná balení. Nákup se započítá až po uložení; rozpracovaný nákup se průběžně ukládá.</p>
+<button class="primary-action" id="buySave" disabled>Uložit nákup</button><button class="quick-details" id="buyClear">Vyprázdnit nákup</button></div>
+<div class="cap"><span>Historie nákupů</span></div><div id="purchaseHistory"></div>
 </section>
 
 <section class="page" id="p-data" hidden>
@@ -300,13 +333,13 @@ input,select,textarea{appearance:none;-webkit-appearance:none}input::-webkit-inn
 <div class="seg" id="segT"></div>
 <div class="settings-label">Barva aplikace</div>
 <div class="grp"><div class="sw-row" id="accP"></div></div>
-</div></div><div class="settings-group"><div class="settings-heading"><span class="settings-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><span class="settings-title"><strong>Zapisování</strong><span>Rychlá množství a vlastní štítky</span></span></div><div class="settings-body">
+</div></div><div class="settings-group"><div class="settings-heading"><span class="settings-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></span><span class="settings-title"><strong>Zapisování</strong><span>Rychlé volby pro zápis dávek</span></span></div><div class="settings-body">
 <div class="grp">
-<label class="f"><span>Rychlé dávky (g)</span><input id="qd" placeholder="2 3 4 6 8"></label>
+<div class="preset-settings"><div class="settings-label">Rychlé volby v gramech</div><p class="purchase-note">Každou volbu uprav zvlášť. Změny se uloží automaticky.</p><div id="presetList"></div><div class="preset-add"><input id="presetNew" type="number" min="0.1" max="200" step="0.1" inputmode="decimal" aria-label="Nová rychlá volba v gramech" placeholder="Nová hodnota (g)"><button id="presetAdd">＋ Přidat</button></div></div>
 <label class="f"><span>Poločas (hodiny)</span><input type="number" id="hl" min="6" max="72" inputmode="numeric"></label>
-<label class="f"><span>Štítky dávek</span><input id="tg" placeholder="Po jídle; Na lačno"></label>
+
 </div>
-<p class="cap" style="display:block;line-height:1.4">Poločas se používá pro odhad vyčištění. U mitragyninu vychází ve studiích zhruba kolem 24 hodin, individuálně se liší. Rychlé dávky odděl mezerou.</p>
+<p class="cap" style="display:block;line-height:1.4">Poločas se používá pro odhad vyčištění. U mitragyninu vychází ve studiích zhruba kolem 24 hodin, individuálně se liší.</p>
 </div></div><div class="settings-group"><div class="settings-heading"><span class="settings-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span><span class="settings-title"><strong>Limity a odstupy</strong><span>Tvoje upozornění a denní hranice</span></span></div><div class="settings-body">
 <div class="grp">
 <label class="f"><span>Zapnout limit</span><input type="checkbox" class="sw" id="limOn"></label>
@@ -345,7 +378,7 @@ input,select,textarea{appearance:none;-webkit-appearance:none}input::-webkit-inn
 <div class="f"><span id="recT"></span><button class="chip" id="recB">Použít</button></div>
 </div>
 <p class="cap" id="tlD" style="display:block;line-height:1.4"></p>
-</div></div></div><div class="pwa-state" id="pwaState" role="status">Offline režim se připravuje při prvním otevření online.</div><p class="settings-footer"><strong>PandaUI</strong><br><span class="app-version">Verze 1.2.3</span><br>Změny se ukládají automaticky do tohoto prohlížeče.</p></section>
+</div></div></div><div class="pwa-state" id="pwaState" role="status">Offline režim se připravuje při prvním otevření online.</div><p class="settings-footer"><strong>PandaUI</strong><br><span class="app-version">Verze 1.3.0</span><br>Změny se ukládají automaticky do tohoto prohlížeče.</p></section>
 
 </main>
 
@@ -391,7 +424,7 @@ const KEY="kratom-denik-v1",TK="kratom-denik-theme";
 let S={strains:[{id:"s1",name:"Příklad: Red Bali",pct:1.5,note:""}],doses:[]};
 try{const r=localStorage.getItem(KEY);if(r){const p=JSON.parse(r);if(p&&Array.isArray(p.strains)&&Array.isArray(p.doses))S=p}}catch(e){}
 const TKG=[.4,.7,1.1,1.7,2.4,3.3,4.3,5.7,7.4,10],tolMg=L=>TKG[L-1]*S.set.kg,lv=m=>{const i=TKG.findIndex(t=>t*S.set.kg>=m);return i<0?10:i+1};
-const DEF={tl:4,hl:24,qd:[2,3,4,6,8],dis:0,kg:70,lastBk:0,bkN:0,acc:"",tags:["Po jídle","Na lačno","Před spaním","Sport"],pin:"",pinOn:false,gapOn:false,gap:3,limOn:false,lim:20,tpOn:false,tpG:20,tpP:10,tpD:""};const norm=()=>{S.set=Object.assign({},DEF,S.set||{});if(S.set.tol){S.set.tl=lv(S.set.tol);delete S.set.tol}};norm();
+const DEF={tl:4,hl:24,qd:[2,3,4,6,8],dis:0,kg:70,lastBk:0,bkN:0,acc:"",tags:["Po jídle","Na lačno","Před spaním","Sport"],pin:"",pinOn:false,gapOn:false,gap:3,limOn:false,lim:20,tpOn:false,tpG:20,tpP:10,tpD:""};const norm=()=>{S.set=Object.assign({},DEF,S.set||{});S.purchases=Array.isArray(S.purchases)?S.purchases:[];S.set.qd=cleanPresets(S.set.qd);if(S.set.tol){S.set.tl=lv(S.set.tol);delete S.set.tol}};norm();
 const sl=s=>s.name+(s.sup?" · "+s.sup:"");
 const idb=(m,v)=>new Promise(r=>{try{const q=indexedDB.open("bp",1);q.onupgradeneeded=()=>q.result.createObjectStore("k");q.onsuccess=()=>{const t=q.result.transaction("k",m==="get"?"readonly":"readwrite"),o=t.objectStore("k"),x=m==="get"?o.get("S"):o.put(v,"S");x.onsuccess=()=>r(x.result);x.onerror=()=>r(null)};q.onerror=()=>r(null)}catch(e){r(null)}});
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}idb("put",JSON.stringify(S))};
@@ -409,14 +442,15 @@ const IC={
  sum:'<path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/>',
  str:'<path d="M5 19c0-8 5-14 15-14 0 10-6 15-14 15"/><path d="M5 19c3-5 6-8 10-10"/>',
  more:'<circle cx="5" cy="12" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/>'};
-const ALL=[["sum","Přehled"],["log","Deník"],["data","Grafy"],["str","Druhy"],["plan","Plán"],["more","Nastavení"]];
+const ALL=[["sum","Přehled"],["log","Historie"],["buy","Nákup"],["data","Grafy"],["str","Druhy"],["plan","Plán"],["more","Nastavení"]];
 IC.data='<path d="M12 3a9 9 0 1 0 9 9h-9z"/><path d="M15 3.5A9 9 0 0 1 20.5 9H15z"/>';
+IC.buy='<path d="M3 4h2l2 12h12l2-9H6M9 20h.01M18 20h.01"/>';
 IC.plan='<path d="M4 17l5-5 4 4 7-8"/><path d="M15 8h5v5"/>';
 function buildTabs(){const n=$("tabs");n.textContent="";
- ALL.filter(t=>t[0]!=="str"&&(t[0]!=="plan"||S.set.tpOn)).forEach(([k,l])=>{const b=el("button");b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+IC[k]+'</svg>';b.appendChild(el("span",null,l));b.dataset.t=k;b.onclick=()=>go(k);if(k===tab)b.setAttribute("aria-current","page");n.appendChild(b)})}
+ ALL.filter(t=>t[0]!=="str"&&t[0]!=="log"&&(t[0]!=="plan"||S.set.tpOn)).forEach(([k,l])=>{const b=el("button");b.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+IC[k]+'</svg>';b.appendChild(el("span",null,l));b.dataset.t=k;b.onclick=()=>go(k);if(k===tab)b.setAttribute("aria-current","page");n.appendChild(b)})}
 function go(k){if(k==="plan"&&!S.set.tpOn)k="sum";tab=k;ALL.forEach(([t])=>{$("p-"+t).hidden=t!==k});
- [...$("tabs").children].forEach(b=>{if(b.dataset.t===(k==="str"?"more":k))b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
- window.scrollTo(0,0);if(k==="sum")chart();if(k==="plan")planPage();if(k==="data")dataPage()}
+ [...$("tabs").children].forEach(b=>{if(b.dataset.t===(k==="str"?"more":k==="log"?"sum":k))b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+ window.scrollTo(0,0);if(k==="sum")chart();if(k==="buy")renderBuy();if(k==="more")setUI();if(k==="plan")planPage();if(k==="data")dataPage()}
 
 /* segmented controls */
 function seg(id,opts,get,set){const w=$(id);w.textContent="";
@@ -527,7 +561,7 @@ function renderQuick(){
 }
 $('quickMinus').onclick=()=>{quickGrams=changeAmount(quickGrams,-.5);renderQuick()};$('quickPlus').onclick=()=>{quickGrams=changeAmount(quickGrams,.5);renderQuick()};
 $('quickStrain').onchange=()=>renderQuick();$('quickEmpty').onclick=()=>{quickFood=quickFood==='Na lačno'?'':'Na lačno';renderQuick()};$('quickMeal').onclick=()=>{quickFood=quickFood==='Po jídle'?'':'Po jídle';renderQuick()};
-$('quickAmount').onclick=()=>quickToSheet(true);$('quickDetails').onclick=()=>quickToSheet();
+$('quickAmount').onclick=()=>{const input=$('quickExact');input.value=quickGrams||'';$('quickAmount').hidden=true;input.hidden=false;input.focus();input.select()};$('quickDetails').onclick=()=>quickToSheet();
 $('quickSave').onclick=()=>{if(quickBusy||quickGrams<=0)return;quickBusy=true;const record=quickRecord();if(commitDose(record)){quickGrams=0;quickFood='';toast('Dávka zapsána')}renderQuick();setTimeout(()=>{quickBusy=false;renderQuick()},700)};
 $('doseMinus').onclick=()=>{$('g').value=changeAmount($('g').value,-.5);calc();dChips()};$('dosePlus').onclick=()=>{$('g').value=changeAmount($('g').value,.5);calc();dChips()};$('dConfirm').onclick=()=>$('dSave').click();
 /* Avoid accidental text selection, page zoom and a retained keyboard after sheets. */
@@ -535,6 +569,46 @@ function connectionUI(){const online=navigator.onLine,state=$('connectionState')
 window.addEventListener('online',connectionUI);window.addEventListener('offline',connectionUI);connectionUI();
 document.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});
 document.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault()},{passive:false});
+
+
+/* Purchases are a personal record, with package price snapshots. */
+function cleanPresets(values){const a=[...new Set((Array.isArray(values)?values:[]).map(Number).filter(v=>Number.isFinite(v)&&v>=.1&&v<=200).map(v=>Math.round(v*10)/10))].sort((a,b)=>a-b).slice(0,8);return a.length?a:[2,3,4,6,8]}
+function lineTotals(items){return items.reduce((a,i)=>({grams:a.grams+i.grams*i.quantity,cost:a.cost+i.unitPrice*i.quantity,count:a.count+i.quantity}),{grams:0,cost:0,count:0})}
+function validPurchaseItems(items){return Array.isArray(items)&&items.length>0&&items.every(i=>i&&Number.isFinite(i.grams)&&i.grams>0&&Number.isSafeInteger(i.quantity)&&i.quantity>0&&Number.isFinite(i.unitPrice)&&i.unitPrice>=0)}
+function purchaseSummary(now=Date.now()){
+ const day=iso(new Date(now)).slice(0,10),purchases=S.purchases.filter(p=>p&&/^\d{4}-\d{2}-\d{2}$/.test(p.date)&&p.date<=day&&validPurchaseItems(p.items));
+ return {...lineTotals(purchases.flatMap(p=>p.items)),purchases:purchases.length};
+}
+function money(n){return n.toLocaleString('cs-CZ',{maximumFractionDigits:2})+' Kč'}
+function getPurchaseDraft(){if(!S.purchaseDraft||!Array.isArray(S.purchaseDraft.items))S.purchaseDraft={items:[],date:todayK(),editing:null};return S.purchaseDraft}
+let buyQuantity=1;
+function renderHomeBalance(){const consumed=S.doses.filter(d=>Number.isFinite(d.g)&&d.g>0&&new Date(d.time).getTime()<=Date.now()).reduce((a,d)=>a+d.g,0),box=$('homeBalance');box.textContent='';const row=el('div','balance-link'),text=el('span');text.append(el('strong',null,'Celkem spotřebováno '+fmt(consumed)+' g'),el('small',null,'Součet všech zaznamenaných dávek'));row.appendChild(text);box.appendChild(row)}
+function fillBuyStrains(){const select=$('buyStrain'),value=select.value;select.textContent='';S.strains.forEach(s=>{const o=el('option',null,sl(s));o.value=s.id;select.appendChild(o)});if(!S.strains.length){const o=el('option',null,'Bez druhu');o.value='';select.appendChild(o)}if(S.strains.some(s=>s.id===value))select.value=value}
+function renderPackageOptions(){const w=$('packageOptions');w.textContent='';[25,50,100,250].forEach(g=>{const b=el('button','chip',g+' g');b.setAttribute('aria-pressed',String(+$('buySize').value===g));b.onclick=()=>{$('buySize').value=g;renderPackageOptions();renderBuyPreview()};w.appendChild(b)})}
+function renderBuyPreview(){const g=$('buySize').valueAsNumber,p=$('buyPrice').valueAsNumber,valid=Number.isFinite(g)&&g>0&&Number.isFinite(p)&&p>=0;$('buyQty').textContent=buyQuantity;$('buyQtyMinus').disabled=buyQuantity<=1;$('buyAdd').disabled=!valid;$('buyPreview').textContent=valid?buyQuantity+' × '+fmt(g)+' g · '+fmt(g*buyQuantity)+' g · '+money(p*buyQuantity)+' ('+money(p/g)+'/g)':'Vyber balení a doplň jeho cenu. Cena je za jedno balení.'}
+function saveDraft(){save();renderBuy()}
+function renderBuy(){
+ const total=purchaseSummary(),w=$('purchaseSummary');w.textContent='';[['Nakoupeno celkem',fmt(total.grams)+' g'],['Za nákupy',money(total.cost)],['Počet balení',String(total.count)],['Uložené nákupy',String(total.purchases)]].forEach(([label,value])=>{const c=el('div','stat');c.append(el('span',null,label),el('b',null,value));w.appendChild(c)});
+ $('purchaseBalanceNote').textContent='Samostatná evidence nákupů. Zapsané dávky tyto součty nijak nemění.';
+ fillBuyStrains();renderPackageOptions();renderBuyPreview();const draft=getPurchaseDraft(),cart=$('cartLines');cart.textContent='';$('cartTitle').textContent=draft.editing?'Upravit nákup':'Rozpracovaný nákup';$('buyClear').textContent=draft.editing?'Zrušit úpravu':'Vyprázdnit nákup';$('buySave').textContent=draft.editing?'Uložit změny nákupu':'Uložit nákup';
+ if(!draft.items.length)cart.appendChild(el('div','cart-empty','Nákup je prázdný. Přidej první balení nahoře.'));
+ draft.items.forEach((item,i)=>{const row=el('div','cart-line'),top=el('div','cart-line-top'),name=el('div');name.append(el('strong',null,item.strain),el('small',null,fmt(item.grams)+' g / balení · '+money(item.unitPrice)));top.append(name,el('b',null,money(item.unitPrice*item.quantity)));const controls=el('div','cart-line-controls'),qty=el('div','quantity-control'),minus=el('button',null,'−'),plus=el('button',null,'+'),remove=el('button','lk','Odebrat');minus.setAttribute('aria-label','Odebrat balení '+item.strain+' '+fmt(item.grams)+' g');plus.setAttribute('aria-label','Přidat balení '+item.strain+' '+fmt(item.grams)+' g');minus.disabled=item.quantity<=1;minus.onclick=()=>{item.quantity--;saveDraft()};plus.onclick=()=>{if(item.quantity>=999){toast('Nejvýše 999 balení v jedné položce.');return}item.quantity++;saveDraft()};remove.onclick=()=>{draft.items.splice(i,1);saveDraft()};qty.append(minus,el('span',null,String(item.quantity)),plus);controls.append(qty,remove);row.append(top,controls);cart.appendChild(row)});
+ const sum=lineTotals(draft.items);$('cartCount').textContent=sum.count+' balení · '+fmt(sum.grams)+' g';$('cartTotal').textContent=money(sum.cost);$('buyDate').value=draft.date;$('buyDate').max=todayK();$('buySave').disabled=!draft.items.length;
+ const h=$('purchaseHistory');h.textContent='';const records=[...S.purchases].filter(p=>p&&validPurchaseItems(p.items)).sort((a,b)=>b.date.localeCompare(a.date));if(!records.length)h.appendChild(el('div','empty','Zatím žádné uložené nákupy.'));
+ records.forEach(p=>{const c=el('div','purchase-history-card'),header=el('div','cart-line-top'),sum=lineTotals(p.items);header.append(el('strong',null,new Date(p.date+'T12:00').toLocaleDateString('cs-CZ')),el('b',null,money(sum.cost)));c.appendChild(header);p.items.forEach(i=>c.appendChild(el('p',null,i.quantity+' × '+fmt(i.grams)+' g · '+i.strain+' · '+money(i.unitPrice*i.quantity))));const actions=el('div','purchase-history-actions'),edit=el('button','lk','Upravit'),del=el('button','lk','Smazat');edit.onclick=()=>{if(getPurchaseDraft().items.length){toast('Nejdřív ulož nebo vyprázdni rozpracovaný nákup.');return}S.purchaseDraft={items:p.items.map(i=>({...i})),date:p.date,editing:p.id};saveDraft();$('cartCard').scrollIntoView({behavior:'smooth',block:'start'})};del.style.color='var(--red)';del.onclick=()=>twice(del,()=>{S.purchases=S.purchases.filter(x=>x.id!==p.id);if(getPurchaseDraft().editing===p.id)S.purchaseDraft=null;save();renderBuy();renderHomeBalance()});actions.append(edit,del);c.appendChild(actions);h.appendChild(c)});
+}
+function addPurchaseLine(){const grams=$('buySize').valueAsNumber,unitPrice=$('buyPrice').valueAsNumber,strain=S.strains.find(s=>s.id===$('buyStrain').value);if(!Number.isFinite(grams)||grams<=0||grams>100000||!Number.isFinite(unitPrice)||unitPrice<0||unitPrice>1e8){toast('Zadej platnou velikost a cenu balení.');return}const item={strainId:strain?.id||null,strain:strain?sl(strain):'Bez druhu',grams,quantity:buyQuantity,unitPrice},draft=getPurchaseDraft(),existing=draft.items.find(i=>i.strainId===item.strainId&&i.strain===item.strain&&i.grams===grams&&i.unitPrice===unitPrice);if(existing){if(existing.quantity+buyQuantity>999){toast('Nejvýše 999 balení v jedné položce.');return}existing.quantity+=buyQuantity}else draft.items.push(item);buyQuantity=1;saveDraft();toast('Balení přidáno do nákupu')}
+function commitPurchase(draft){if(!validPurchaseItems(draft.items)||!/^\d{4}-\d{2}-\d{2}$/.test(draft.date)||!Number.isFinite(new Date(draft.date+'T12:00').getTime())||draft.date>todayK())return false;const record={id:draft.editing||uid(),date:draft.date,items:draft.items.map(i=>({...i}))};if(draft.editing){const index=S.purchases.findIndex(p=>p.id===draft.editing);if(index<0)return false;S.purchases[index]=record}else S.purchases.push(record);S.purchaseDraft=null;save();return true}
+$('buyQtyMinus').onclick=()=>{buyQuantity=Math.max(1,buyQuantity-1);renderBuyPreview()};$('buyQtyPlus').onclick=()=>{buyQuantity=Math.min(999,buyQuantity+1);renderBuyPreview()};$('buySize').oninput=()=>{renderPackageOptions();renderBuyPreview()};$('buyPrice').oninput=renderBuyPreview;$('buyStrain').onchange=renderBuyPreview;$('buyAdd').onclick=addPurchaseLine;
+$('buyDate').onchange=()=>{getPurchaseDraft().date=$('buyDate').value;save()};$('buySave').onclick=()=>{if(!commitPurchase(getPurchaseDraft())){toast('Zkontroluj položky a datum nákupu (nejpozději dnes).');return}renderBuy();renderHomeBalance();renderQuick();toast('Nákup uložen')};$('buyClear').onclick=()=>{S.purchaseDraft=null;saveDraft()};
+/* Individual, editable quick amount presets. */
+function updatePresets(values){S.set.qd=cleanPresets(values);save();renderPresetSettings();renderQuick();dChips()}
+function renderPresetSettings(){const w=$('presetList');w.textContent='';S.set.qd.forEach((g,index)=>{const row=el('div','preset-row'),minus=el('button',null,'−'),plus=el('button',null,'+'),remove=el('button','preset-remove','×'),input=el('input');input.type='number';input.min='.1';input.max='200';input.step='.1';input.inputMode='decimal';input.value=g;input.setAttribute('aria-label','Rychlá volba '+(index+1)+' v gramech');minus.setAttribute('aria-label','Snížit rychlou volbu '+fmt(g)+' g');plus.setAttribute('aria-label','Zvýšit rychlou volbu '+fmt(g)+' g');remove.setAttribute('aria-label','Odstranit rychlou volbu '+fmt(g)+' g');remove.disabled=S.set.qd.length<=1;
+ const change=value=>{if(!Number.isFinite(value)||value<.1||value>200||S.set.qd.some((v,i)=>i!==index&&Math.abs(v-value)<.001)){toast('Použij odlišnou hodnotu od 0,1 do 200 g.');input.value=g;return}const values=[...S.set.qd];values[index]=Math.round(value*10)/10;updatePresets(values)};
+ minus.disabled=g<=.1;minus.onclick=()=>change(Math.max(.1,Math.round((g-.5)*10)/10));plus.onclick=()=>change(Math.round((g+.5)*10)/10);input.onchange=()=>change(input.valueAsNumber);remove.onclick=()=>updatePresets(S.set.qd.filter((_,i)=>i!==index));row.append(minus,input,el('span',null,'g'),plus,remove);w.appendChild(row)});$('presetAdd').disabled=S.set.qd.length>=8;}
+$('presetAdd').onclick=()=>{const value=$('presetNew').valueAsNumber;if(S.set.qd.length>=8||!Number.isFinite(value)||value<.1||value>200||S.set.qd.includes(Math.round(value*10)/10)){toast('Přidej odlišnou hodnotu od 0,1 do 200 g, nejvýše 8 voleb.');return}updatePresets([...S.set.qd,value]);$('presetNew').value=''};
+function finishQuickExact(){const input=$('quickExact');if(input.hidden)return;const value=input.valueAsNumber;if(!Number.isFinite(value)||value<=0||value>200){toast('Zadej množství od 0,1 do 200 g.')}else quickGrams=Math.round(value*10)/10;input.hidden=true;$('quickAmount').hidden=false;input.blur();renderQuick()}
+$('quickExact').onblur=finishQuickExact;$('quickExact').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();finishQuickExact()}if(e.key==='Escape'){$('quickExact').hidden=true;$('quickAmount').hidden=false;renderQuick()}};
 
 /* chart */
 function step(x){const p=Math.pow(10,Math.floor(Math.log10(x))),r=x/p;return(r<=1?1:r<=2?2:r<=2.5?2.5:r<=5?5:10)*p}
@@ -574,10 +648,10 @@ function tolCard(){
   a.append(y,no);b.appendChild(a);s.appendChild(b)}}
 function setUI(){const L=S.set.tl,T=tolMg(L);$("tl").value=L;$("tlS").textContent="Úroveň "+L+" / 10";
  $("tlD").textContent="Úroveň "+L+" odpovídá zhruba "+Math.round(T)+" mg mitragyninu za den při váze "+S.set.kg+" kg (asi "+fmt(T/15)+" g při 1,5 %). Když tvé dávky dlouhodobě stoupnou výš, aplikace nabídne úpravu.";
- $("qd").value=S.set.qd.map(fmt).join(" ");$("hl").value=S.set.hl;limUI();recUI();accUI();applyAcc()}
+ renderPresetSettings();$("hl").value=S.set.hl;limUI();recUI();accUI();applyAcc()}
 $("tl").oninput=()=>{S.set.tl=+$("tl").value;save();setUI();chart()};
 $("hl").onchange=()=>{const v=parseFloat($("hl").value);if(v>=6&&v<=72){S.set.hl=v;save()}setUI();chart()};
-$("qd").onchange=()=>{const a=$("qd").value.split(/[;\s]+/).map(x=>parseFloat(x.replace(",","."))).filter(x=>x>0).slice(0,8);if(a.length){S.set.qd=a;save()}setUI();chart()};
+
 const dayG=(day,ex)=>S.doses.reduce((a,d)=>a+(d.time.slice(0,10)===day&&d.id!==ex?d.g:0),0);
 const todayK=()=>iso(new Date()).slice(0,10);
 const avgG=()=>{const C=new Date();C.setDate(C.getDate()-6);const f=iso(C).slice(0,10);return S.doses.reduce((a,d)=>a+(d.time.slice(0,10)>=f?d.g:0),0)/7};
@@ -595,7 +669,7 @@ function limCard(){const w=$("limC");w.textContent="";const L=limit();if(!L)retu
  const sk=streaks();c.appendChild(row);
  if(sk){row.style.borderBottom=".5px solid var(--sep)";const r2=el("div","cell"),l2=el("div");r2.style.cssText="cursor:default;border-bottom:0";l2.append(el("div",null,"Série v limitu"),el("div","s","Rekord "+sk.best+" d"));r2.append(l2,el("div","r",sk.cur+" d"));c.appendChild(r2)}
  w.appendChild(c)}
-function limUI(){const z=S.set;$("bkI").textContent=z.lastBk?"Poslední záloha: "+new Date(z.lastBk).toLocaleDateString("cs-CZ",{day:"numeric",month:"numeric",year:"numeric"})+". ":"Zatím žádná záloha do souboru. ";$("tg").value=z.tags.join("; ");$("pnOn").checked=!!z.pinOn;$("pnCh").hidden=!z.pinOn;$("gapOn").checked=z.gapOn;$("gap").value=z.gap;$("limOn").checked=z.limOn;$("lim").value=z.lim;$("tpOn").checked=z.tpOn;$("tpG").value=z.tpG;$("tpP").value=z.tpP;$("tpR").hidden=!z.tpOn;
+function limUI(){const z=S.set;$("bkI").textContent=z.lastBk?"Poslední záloha: "+new Date(z.lastBk).toLocaleDateString("cs-CZ",{day:"numeric",month:"numeric",year:"numeric"})+". ":"Zatím žádná záloha do souboru. ";$("pnOn").checked=!!z.pinOn;$("pnCh").hidden=!z.pinOn;$("gapOn").checked=z.gapOn;$("gap").value=z.gap;$("limOn").checked=z.limOn;$("lim").value=z.lim;$("tpOn").checked=z.tpOn;$("tpG").value=z.tpG;$("tpP").value=z.tpP;$("tpR").hidden=!z.tpOn;
  let t="Po zapnutí se denní limit každý týden sníží o zvolené procento od startovní dávky. Nahrazuje ručně nastavený limit a kdykoli ho vypneš.";
  if(z.tpOn&&z.tpD){const [y,m,d]=z.tpD.split("-"),L=limit();t="Plán začal "+(+d)+". "+(+m)+". "+y+". Dnešní limit: "+fmt(L.g)+" g (týden "+L.w+"). Snižování po malých krocích bývá snesitelnější než náhlé vysazení; při vysokém příjmu se případně poraď s lékařem. Podrobnosti najdeš dole v záložce Plán."}
  $("tpD").textContent=t}
@@ -630,7 +704,7 @@ $("gapOn").onchange=()=>{S.set.gapOn=$("gapOn").checked;save();setUI();chart()};
 setInterval(()=>{if(tab==="sum"&&$("ov").hidden)chart()},60000);
 let curTags=[],pinBuf="",pinTmp="",pinMode="",hideT=0;
 function tagsUI(){const w=$("tagsD");w.textContent="";[...new Set([...S.set.tags,...curTags])].forEach(t=>{const b=el("button","chip",t);b.setAttribute("aria-pressed",String(curTags.includes(t)));b.onclick=()=>{curTags=curTags.includes(t)?curTags.filter(x=>x!==t):[...curTags,t];tagsUI()};w.appendChild(b)})}
-$("tg").onchange=()=>{const a=$("tg").value.split(/[;,]+/).map(x=>x.trim()).filter(Boolean).slice(0,10);if(a.length){S.set.tags=a;save()}setUI()};
+
 function limFor(k){const z=S.set;if(z.tpOn&&z.tpD&&k>=z.tpD){const w=Math.floor((new Date(k+"T00:00")-new Date(z.tpD+"T00:00"))/6048e5),g=z.tpG*Math.pow(1-z.tpP/100,w);return g<.5?0:Math.round(g*10)/10}return z.limOn?z.lim:null}
 function streaks(){if(!S.doses.length)return null;const first=S.doses.map(d=>d.time.slice(0,10)).sort()[0],t0=new Date(first+"T12:00"),n=Math.round((new Date(todayK()+"T12:00")-t0)/864e5)+1;let run=0,best=0;
  for(let i=0;i<n;i++){const k=iso(new Date(t0.getTime()+i*864e5)).slice(0,10),L=limFor(k);if(L==null)return null;if(dayG(k)<=L+1e-9){run++;best=Math.max(best,run)}else run=0}
@@ -765,7 +839,7 @@ function bkCard(){const w=$("bkC");w.textContent="";if(S.doses.length<3)return;c
  const b=el("div","sug"),a=el("div","pad"),y=el("button",null,"Zálohovat do souboru");
  b.appendChild(el("p",null,d==null?"Data zatím nemáš zálohovaná do souboru. Ulož je do telefonu, ať o záznamy nepřijdeš.":"Poslední záloha je "+(d?"před "+d+" dny":"z dneška")+", od ní přibylo "+(S.doses.length-z.bkN)+" dávek."));
  y.onclick=backupFile;a.appendChild(y);b.appendChild(a);w.appendChild(b)}
-function chart(){renderQuick();heroC();tolCard();limCard();gapCard();bkCard();drawChart()}
+function chart(){renderQuick();renderHomeBalance();heroC();tolCard();limCard();gapCard();bkCard();drawChart()}
 function drawChart(){
  const keys=[];for(let i=range-1;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);keys.push(iso(d).slice(0,10))}
  const G={},M={},K={};S.doses.forEach(d=>{const k=d.time.slice(0,10);G[k]=(G[k]||0)+d.g;M[k]=(M[k]||0)+mg(d.g,d.pct);K[k]=(K[k]||0)+d.g*(d.price||0)});
