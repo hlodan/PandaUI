@@ -56,6 +56,14 @@ function normalizeWidgetUI() {
     });
     layouts[page] = { order, hidden, config };
   }
+  // Placements are independent of the original configuration scope.
+  const assigned = new Set(), all = Object.keys({ ...WIDGET_CATALOGUE.home, ...WIDGET_CATALOGUE.stats });
+  for (const page of ['home', 'stats']) {
+    const saved = previous[page] || {};
+    layouts[page].order = (Array.isArray(saved.order) ? saved.order : DEFAULT_LAYOUT[page].order).filter(k => all.includes(k) && !assigned.has(k) && assigned.add(k));
+    layouts[page].hidden = (Array.isArray(saved.hidden) ? saved.hidden : DEFAULT_LAYOUT[page].hidden).filter(k => layouts[page].order.includes(k));
+  }
+  all.forEach(k => { if (!assigned.has(k)) { const page = widgetScope(k); layouts[page].order.push(k); if (DEFAULT_LAYOUT[page].hidden.includes(k)) layouts[page].hidden.push(k); } });
   const purchase = previous.purchase || {};
   const sizes = [...new Set((Array.isArray(purchase.sizes) ? purchase.sizes : [25, 50, 100, 250]).map(Number).filter(g => Number.isFinite(g) && g > 0 && g <= 100000))].slice(0, 8);
   S.ui = { ...previous, schema: 2, ...layouts, appearance: { density: previous.appearance?.density === 'compact' ? 'compact' : 'standard', motion: previous.appearance?.motion !== false, strongSeparators: !!previous.appearance?.strongSeparators }, purchase: { sizes, showCounts: purchase.showCounts !== false, compactCart: !!purchase.compactCart, historyOrder: purchase.historyOrder === 'oldest' ? 'oldest' : 'newest', historyCount: [0, 5, 10, 20].includes(purchase.historyCount) ? purchase.historyCount : 10 } };
@@ -71,12 +79,14 @@ function normalizeWidgetUI() {
   if (![7, 30, 90].includes(S.ui.home.config.spending.days)) S.ui.home.config.spending.days = 7;
 }
 function widgetConfig(key, page = 'home') {
+  page = widgetScope(key);
   return S.ui?.[page]?.config?.[key] || DEFAULT_WIDGET_OPTIONS[page]?.[key] || {};
 }
 function purchaseOptions() {
   return S.ui?.purchase || { sizes: [25, 50, 100, 250], showCounts: true, compactCart: false, historyOrder: 'newest', historyCount: 10 };
 }
 function saveWidgetConfig(key, page, property, value) {
+  page = widgetScope(key);
   if (!S.ui?.[page]?.config?.[key]) return;
   S.ui[page].config[key][property] = value;
   save();
@@ -139,11 +149,13 @@ function applyAppearance() {
   document.documentElement.classList.toggle('strong-separators', S.ui.appearance.strongSeparators);
 }
 function widgetNode(key, page) {
-  return document.querySelector('[data-widget="' + key + '"][data-widget-page="' + page + '"]');
+  return document.querySelector('[data-widget="' + key + '"]');
 }
 function renderWidgetHead(node, key, page) {
-  const meta = WIDGET_CATALOGUE[page][key], header = node.querySelector('.widget-heading');
-  if (header.dataset.ready) return;
+  const meta = WIDGET_CATALOGUE[widgetScope(key)][key], header = node.querySelector('.widget-heading');
+  node.dataset.widgetPage = page;
+  if (header.dataset.ready === page) return;
+  header.textContent = '';
   const identity = el('div', 'widget-identity'), icon = el('span', 'widget-icon', meta.icon), title = el('h2', null, meta.title);
   identity.append(icon, title);
   const tools = el('div', 'widget-tools'), grip = el('button', 'widget-grip', '⠿'), menu = el('button', 'widget-menu-button', '•••');
@@ -155,7 +167,7 @@ function renderWidgetHead(node, key, page) {
   menu.setAttribute('aria-label', 'Možnosti widgetu ' + meta.title);
   menu.setAttribute('aria-haspopup', 'dialog');
   menu.onclick = () => openWidgetMenu(key, page);
-  tools.append(grip, menu); header.append(identity, tools); header.dataset.ready = 'true';
+  tools.append(grip, menu); header.append(identity, tools); header.dataset.ready = page;
   node.dataset.tone = meta.tone;
 }
 function drawLayout(page) {
@@ -197,6 +209,7 @@ function hideWidget(key, page) {
   save(); closeWidgetSheet(); renderWidgets(); toast('Widget skrytý. Vrátíš ho přes Přidat widget.');
 }
 function addWidget(key, page) {
+  if (!S.ui[page].order.includes(key)) transferWidget(key, page, false);
   S.ui[page].hidden = S.ui[page].hidden.filter(k => k !== key);
   save(); renderWidgets(); openWidgetCatalogue(page);
 }
@@ -294,10 +307,12 @@ function renderWidgets() {
   if (!widgetSystemReady) return;
   if (!S.ui?.home?.config || !S.ui?.stats?.config) normalizeWidgetUI();
   applyAppearance();
+  renderQuick();
+  if (S.ui.home.order.some(k => widgetScope(k) === 'stats' && !S.ui.home.hidden.includes(k))) dataPage();
   $('overviewDate').textContent = new Date().toLocaleDateString('cs-CZ', { weekday: 'long', day: 'numeric', month: 'long' });
   renderLimitWidget(); renderClearanceWidget(); renderWeightWidget(); renderLifetimeStatistics(); renderExtraWidgets(); applyQuickOptions();
   const gap = $('gapC'); if (!gap.children.length) { const p = el('div', 'limit-empty'); p.append(el('p', null, 'Nastav si vlastní připomínku odstupu. Není to výpočet bezpečné doby další dávky.')); const b = el('button', 'small-primary', 'Nastavit odstup'); b.onclick = () => openWidgetMenu('gap', 'home'); p.appendChild(b); gap.appendChild(p); }
-  drawLayout('home'); drawLayout('stats');
+  drawLayout('home'); drawLayout('stats'); renderTodayComparisonButton(); renderConsumptionReview();
 }
 
 function returnLiveEditors() {
@@ -333,11 +348,13 @@ function changeOption(key, page, property, value) {
   renderQuick(); renderWidgets();
 }
 function openWidgetMenu(key, page = 'home') {
-  const meta = WIDGET_CATALOGUE[page]?.[key]; if (!meta) return;
+  page = widgetPlacement(key);
+  const meta = WIDGET_CATALOGUE[widgetScope(key)]?.[key]; if (!meta) return;
   activeWidgetSheet = { key, page };
   openWidgetSheet(meta.title, page === 'home' ? 'Widget v přehledu' : 'Karta statistik', body => {
     const config = widgetConfig(key, page), change = (property, value) => changeOption(key, page, property, value);
     body.appendChild(el('p', 'config-intro', meta.description));
+    if (widgetScope(key) === 'stats' && !['lifetime', 'forecast', 'weekly', 'level'].includes(key)) addSelect(body, 'Společné období statistik', dr, [[7, '7 dní'], [14, '14 dní'], [30, 'Měsíc'], [365, 'Rok']], value => { dr = +value; segs(); dataPage(); });
     if (key === 'quick') {
       addSelect(body, 'Krok tlačítek −/+', config.step, [[.1, '0,1 g'], [.5, '0,5 g'], [1, '1 g']], v => change('step', +v));
       addSwitch(body, 'Volba jídla', config.showMeals, v => change('showMeals', v));
@@ -371,6 +388,7 @@ function openWidgetMenu(key, page = 'home') {
     actionButton(actions, '↑ Posunout výše', () => { moveWidget(key, page, -1); openWidgetMenu(key, page); }, '', index <= 0);
     actionButton(actions, '↓ Posunout níže', () => { moveWidget(key, page, 1); openWidgetMenu(key, page); }, '', index < 0 || index === visible.length - 1);
     body.appendChild(actions);
+    actionButton(body, page === 'home' ? 'Přesunout do Statistik →' : 'Přesunout do Přehledu →', () => transferWidget(key, page === 'home' ? 'stats' : 'home'));
     if (index >= 0) actionButton(body, 'Skrýt tuto kartu', () => hideWidget(key, page), 'destructive');
     else actionButton(body, 'Přidat do přehledu', () => { addWidget(key, page); closeWidgetSheet(); });
     body.appendChild(el('p', 'config-footer', 'Změny se ukládají automaticky. Skryté widgety lze kdykoli přidat zpět.'));
@@ -378,13 +396,13 @@ function openWidgetMenu(key, page = 'home') {
 }
 function openWidgetCatalogue(page = 'home') {
   openWidgetSheet(page === 'home' ? 'Přidej si widget' : 'Karty statistik', 'Tvůj přehled. Tvoje pořadí.', body => {
-    Object.entries(WIDGET_CATALOGUE[page]).forEach(([key, meta]) => {
-      const added = !S.ui[page].hidden.includes(key), row = el('button', 'catalogue-row' + (added ? ' is-added' : ''));
+    Object.entries({ ...WIDGET_CATALOGUE.home, ...WIDGET_CATALOGUE.stats }).forEach(([key, meta]) => {
+      const added = S.ui[page].order.includes(key) && !S.ui[page].hidden.includes(key), row = el('button', 'catalogue-row' + (added ? ' is-added' : ''));
       const icon = el('span', 'widget-icon', meta.icon), label = el('span', 'catalogue-copy'); icon.dataset.tone = meta.tone;
-      label.append(el('strong', null, meta.title), el('small', null, meta.description)); row.append(icon, label, el('span', 'catalogue-add', added ? '✓' : '+'));
+      label.append(el('strong', null, meta.title), el('small', null, meta.description + (widgetPlacement(key) !== page ? ' · Přesune se z druhé stránky.' : ''))); row.append(icon, label, el('span', 'catalogue-add', added ? '✓' : '+'));
       row.setAttribute('aria-label', (added ? 'Upravit ' : 'Přidat ') + meta.title); row.onclick = () => added ? openWidgetMenu(key, page) : addWidget(key, page); body.appendChild(row);
     });
-    actionButton(body, 'Obnovit výchozí rozložení', () => { S.ui[page].order = [...DEFAULT_LAYOUT[page].order]; S.ui[page].hidden = [...DEFAULT_LAYOUT[page].hidden]; save(); renderWidgets(); closeWidgetSheet(); toast('Výchozí rozložení obnoveno'); });
+    actionButton(body, 'Obnovit výchozí rozložení obou stránek', () => { for (const p of ['home', 'stats']) { S.ui[p].order = [...DEFAULT_LAYOUT[p].order]; S.ui[p].hidden = [...DEFAULT_LAYOUT[p].hidden]; } save(); renderWidgets(); closeWidgetSheet(); toast('Výchozí rozložení obnoveno'); });
   });
 }
 
@@ -452,9 +470,71 @@ window.addEventListener('scroll', () => { if (headerTick) return; headerTick = t
 // Re-normalize optional UI fields on old backup import, without touching records.
 const previousNorm = norm;
 norm = () => { previousNorm(); normalizeWidgetUI(); range = widgetConfig('trend').range; metric = widgetConfig('trend').metric; segs(); };
+function widgetScope(key) { return WIDGET_CATALOGUE.home[key] ? 'home' : 'stats'; }
+function widgetPlacement(key) { return S.ui.home.order.includes(key) ? 'home' : 'stats'; }
+function transferWidget(key, destination, follow = true) {
+  if (!['home', 'stats'].includes(destination) || !WIDGET_CATALOGUE[widgetScope(key)][key]) return;
+  for (const page of ['home', 'stats']) { S.ui[page].order = S.ui[page].order.filter(k => k !== key); S.ui[page].hidden = S.ui[page].hidden.filter(k => k !== key); }
+  S.ui[destination].order.push(key); save(); closeWidgetSheet(); renderWidgets();
+  if (follow) { go(destination === 'home' ? 'sum' : 'data'); toast('Karta přesunuta. Její nastavení zůstalo zachované.'); }
+}
+function sameWeekdayComparison(now = new Date()) {
+  const past = new Date(now); past.setDate(past.getDate() - 7);
+  const today = iso(now).slice(0, 10), previous = iso(past).slice(0, 10);
+  const summarize = rows => ({ grams: rows.reduce((s, d) => s + d.g, 0), count: rows.length, cost: rows.reduce((s, d) => s + d.g * (d.price || 0), 0), incompletePrice: rows.some(d => !(d.price > 0)) });
+  const doses = S.doses.filter(d => d.g > 0 && new Date(d.time).getTime() <= now.getTime());
+  return { today, previous, now, past, current: summarize(doses.filter(d => d.time.slice(0, 10) === today)), prior: summarize(doses.filter(d => d.time.slice(0, 10) === previous && new Date(d.time).getTime() <= past.getTime())), fullPrior: summarize(doses.filter(d => d.time.slice(0, 10) === previous)) };
+}
+function renderTodayComparisonButton() {
+  const node = widgetNode('today'); if (!node || $('todayComparison')) return;
+  const button = el('button', 'config-action', '⇄ Porovnat se stejným dnem minulého týdne'); button.id = 'todayComparison'; button.onclick = openTodayComparison;
+  node.appendChild(button);
+}
+function openTodayComparison() {
+  const c = sameWeekdayComparison(), delta = c.current.grams - c.prior.grams;
+  openWidgetSheet('Dnešek proti minulému týdnu', 'Stejný den v týdnu · srovnání do stejného času', body => {
+    body.append(el('p', 'config-intro', c.now.toLocaleDateString('cs-CZ') + ' a ' + c.past.toLocaleDateString('cs-CZ') + ' · do ' + c.now.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' })), el('strong', 'widget-big-number', delta === 0 ? 'Stejné množství' : 'O ' + fmt(Math.abs(delta)) + ' g ' + (delta > 0 ? 'více' : 'méně')));
+    if (c.prior.grams > 0) body.appendChild(el('p', 'widget-note', (delta > 0 ? '+' : '') + fmt(delta / c.prior.grams * 100) + ' % oproti minulému týdnu do stejného času.'));
+    for (const [label, a, b] of [['Spotřeba', fmt(c.current.grams) + ' g', fmt(c.prior.grams) + ' g'], ['Záznamy', c.current.count, c.prior.count], ['Náklady', money(c.current.cost), money(c.prior.cost)]]) body.appendChild(el('p', 'config-intro', label + ' · dnes: ' + a + ' · minule: ' + b));
+    body.appendChild(el('p', 'widget-note', 'Celý minulý den: ' + fmt(c.fullPrior.grams) + ' g v ' + c.fullPrior.count + ' záznamech. Nula znamená žádný uložený záznam, nikoli ověřenou abstinenci.'));
+    if (c.current.incompletePrice || c.prior.incompletePrice) body.appendChild(el('p', 'widget-note', 'Část dávek nemá cenu; náklady jsou neúplné.'));
+  });
+}
+function consumptionReview(now = new Date()) {
+  const day = new Date(now); day.setHours(12, 0, 0, 0);
+  const key = n => { const d = new Date(day); d.setDate(d.getDate() + n); return iso(d).slice(0, 10); };
+  const rows = currentDoses(), recent = rows.filter(d => d.time.slice(0, 10) >= key(-7) && d.time.slice(0, 10) < key(0)), prior = rows.filter(d => d.time.slice(0, 10) >= key(-14) && d.time.slice(0, 10) < key(-7));
+  const sum = a => a.reduce((s, d) => s + d.g, 0), ready = rows.some(d => d.time.slice(0, 10) <= key(-14)) && new Set(recent.map(d => d.time.slice(0, 10))).size >= 3 && new Set(prior.map(d => d.time.slice(0, 10))).size >= 3;
+  return { ready, current: sum(recent) / 7, prior: sum(prior) / 7, ratio: sum(prior) > 0 ? sum(recent) / sum(prior) : null, date: key(0) };
+}
+function renderConsumptionReview() {
+  const anchor = $('profileToleranceClear'); if (!anchor) return;
+  let box = $('consumptionReview');
+  if (!box) { box = el('div'); box.id = 'consumptionReview'; anchor.parentElement.appendChild(box); }
+  box.textContent = '';
+  const trend = consumptionReview();
+  box.appendChild(el('p', 'widget-note', trend.ready ? 'Referenční spotřeba: ' + fmt(trend.current) + ' g/den za posledních 7 celých dní; předtím ' + fmt(trend.prior) + ' g/den. Poměr ' + fmt(trend.ratio) + '×.' + (getProfileWeight() ? ' Nyní ' + formatRelative(trend.current / getProfileWeight()) + ' g/kg/den.' : '') : 'Pro trend potřebujeme 14 dní historie a alespoň 3 dny se záznamem v každém týdnu.'));
+  box.appendChild(el('p', 'widget-note', 'Doporučené číslo tolerance nelze z gramů ani váhy spolehlivě určit. Hodnocení 1–10 vyplň podle vlastní zkušenosti. Trend spotřeby jej automaticky nemění.'));
+  addSwitch(box, 'Upozornit na změnu spotřeby', S.profile.consumptionAlerts !== false, value => { S.profile.consumptionAlerts = value; save(); }, 'Nabídne znovu posoudit vlastní hodnocení tolerance.');
+  addSelect(box, 'Upozornit při změně alespoň', S.profile.consumptionThreshold === 50 ? 50 : 25, [[25, '25 %'], [50, '50 %']], value => { S.profile.consumptionThreshold = +value; save(); });
+}
+function maybeSuggestConsumptionReview() {
+  if (!widgetSystemReady || S.profile.consumptionAlerts === false) return;
+  const trend = consumptionReview(), threshold = S.profile.consumptionThreshold === 50 ? .5 : .25;
+  const last = new Date(S.profile.consumptionReviewAt || 0).getTime();
+  if (!trend.ready || trend.ratio == null || Math.abs(trend.ratio - 1) + 1e-9 < threshold || Date.now() - last < 7 * 864e5 || !$('widgetOverlay').hidden || !$('ov').hidden || !$('lock').hidden) return;
+  S.profile.consumptionReviewAt = new Date().toISOString(); save();
+  openWidgetSheet('Spotřeba se změnila', 'Připomenutí osobního hodnocení', body => {
+    body.appendChild(el('p', 'config-intro', 'Posledních 7 celých dní: ' + fmt(trend.current) + ' g/den, předchozích 7 dní: ' + fmt(trend.prior) + ' g/den. Změna ' + (trend.ratio >= 1 ? '+' : '') + fmt((trend.ratio - 1) * 100) + ' %. Chceš znovu posoudit svoji vnímanou toleranci? Samotná změna gramů změnu tolerance neprokazuje.'));
+    actionButton(body, 'Otevřít osobní hodnocení', () => { closeWidgetSheet(); go('more'); $('tl').focus(); });
+    actionButton(body, 'Teď ne · další připomenutí nejdříve za týden', closeWidgetSheet);
+  });
+}
 normalizeWidgetUI();
 range = widgetConfig('trend').range; metric = widgetConfig('trend').metric;
 widgetSystemReady = true;
 bootPanda();
 if (IS_PREVIEW) { $('previewBadge').hidden = false; document.documentElement.classList.add('is-preview'); }
 renderWidgets();
+setTimeout(maybeSuggestConsumptionReview, 1200);
+setInterval(maybeSuggestConsumptionReview, 60000);

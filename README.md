@@ -1,4 +1,8 @@
-# PandaUI 2.0.0
+# PandaUI 2.1.0
+
+Všechny karty Přehledu a Statistik lze přesunout mezi oběma stránkami pomocí nabídky •••. Nastavení i pořadí se ukládají. Dnešek v číslech nabízí porovnání se stejným dnem minulého týdne do stejného času, včetně gramů, počtu záznamů a nákladů.
+
+Osobní profil ukazuje číselný trend spotřeby (dva poslední celé týdny) a po změně o 25 % nebo 50 % může nabídnout přehodnocení vlastní tolerance. Upozornění lze vypnout a zobrazí se nejvýše jednou týdně. Vyžaduje alespoň 14 dní historie a 3 dny se záznamem v každém týdnu. Skutečná tolerance ani doporučené skóre 1–10 se z gramů nebo váhy neodvozují; číslo zůstává vlastním hodnocením uživatele.
 
 Osobní deník s přehledy spotřeby a nákladů, upravený pro iPhone.
 
