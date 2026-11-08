@@ -1,6 +1,6 @@
 /* PandaUI: cache only application files; never erase dose storage. */
-const PREFIX='pandaui-shell-',CACHE=PREFIX+'2.2.1-1';
-const FILES=['./','./index.html','./manifest.webmanifest','./icon.svg','./icon-180.png','./icon-192.png','./icon-512.png','./assets/app.css','./assets/widgets.css','./assets/ios.css','./assets/core.js','./assets/widgets.js','./assets/library.js','./assets/library.css','./assets/cover.js','./assets/cover.css','./assets/stack-mark.svg'];
+const PREFIX='pandaui-shell-',CACHE=PREFIX+'2.2.1-fix2';
+const FILES=['./','./index.html','./manifest.webmanifest','./icon.svg','./icon-180.png','./icon-192.png','./icon-512.png','./assets/app.css?v=2.2.1-fix2','./assets/widgets.css?v=2.2.1-fix2','./assets/ios.css?v=2.2.1-fix2','./assets/core.js?v=2.2.1-fix2','./assets/widgets.js?v=2.2.1-fix2','./assets/library.js?v=2.2.1-fix2','./assets/library.css?v=2.2.1-fix2','./assets/cover.js?v=2.2.1-fix2','./assets/cover.css?v=2.2.1-fix2','./assets/stack-mark.svg?v=2.2.1-fix2','./assets/startup.js?v=2.2.1-fix2'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(async cache=>{await cache.addAll(FILES);await self.skipWaiting()}))});
 self.addEventListener('activate',event=>{event.waitUntil((async()=>{for(const key of await caches.keys())if(key.startsWith(PREFIX)&&key!==CACHE)await caches.delete(key);await self.clients.claim()})())});
 self.addEventListener('fetch',event=>{const url=new URL(event.request.url);if(event.request.method!=='GET'||url.origin!==self.location.origin||!url.href.startsWith(self.registration.scope))return;

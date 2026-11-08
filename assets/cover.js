@@ -217,7 +217,7 @@ function initCover() {
     if (event.key === 'Escape') { event.preventDefault(); closeCoverDialog(); }
     if (event.key === 'Tab') { const fields = [...$('coverDialog').querySelectorAll('button,input')].filter(n => !n.disabled && n.getClientRects().length); const first = fields[0], last = fields.at(-1); if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); } else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); } }
   });
-  lockCover(); prepareCoverOffline();
+  lockCover(); prepareCoverOffline(); window.PANDA_READY = true; if ($('startupRecovery')) $('startupRecovery').hidden = true;
 }
 function checkCoverIdle() { if (isPrivateUnlocked() && Date.now() - coverState.idleAt >= readCoverConfig().idleSeconds * 1000) lockCover(); }
 
