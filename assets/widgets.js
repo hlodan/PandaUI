@@ -77,6 +77,7 @@ function normalizeWidgetUI() {
   if (![7, 14, 30].includes(t.range)) t.range = 7;
   if (!['g', 'mg', 'kc'].includes(t.metric)) t.metric = 'g';
   if (![7, 30, 90].includes(S.ui.home.config.spending.days)) S.ui.home.config.spending.days = 7;
+  normalizeLibrary();
 }
 function widgetConfig(key, page = 'home') {
   page = widgetScope(key);
@@ -92,6 +93,8 @@ function saveWidgetConfig(key, page, property, value) {
   save();
 }
 function isCompactWidget(key, page = 'home') {
+  if (widgetConfig(key, page).size === 'small') return true;
+  if (widgetConfig(key, page).size === 'standard') return false;
   const explicit = widgetConfig(key, page).compact;
   return typeof explicit === 'boolean' ? explicit : S.ui.appearance.density === 'compact';
 }
@@ -123,6 +126,7 @@ function renderProfileSettings() {
   $('tl').setAttribute('aria-label', 'Vnímaná tolerance ke kratomu od 1 do 10');
   $('profileToleranceValue').textContent = tolerance ? tolerance + ' / 10' : 'Nezadaná';
   $('profileToleranceClear').hidden = tolerance == null;
+  renderConsumptionReview();
 }
 function appendWeightCalculation() {
   const weight = getProfileWeight(), grams = parseFloat($('g').value), strain = S.strains.find(s => s.id === $('st').value);
@@ -139,6 +143,8 @@ function renderWeightWidget() {
   box.append(el('strong', 'widget-big-number', formatRelative(grams / weight) + ' g/kg'), el('p', 'widget-note', 'Dnešní gramy prášku / aktuální tělesná hmotnost ' + fmt(weight) + ' kg.'));
   if (known.length) box.appendChild(el('p', 'widget-note', 'Mitragynin podle zadaného složení: ≈ ' + formatRelative(mitragynine / weight) + ' mg/kg' + (known.length < today.length ? ' (jen z dávek s vyplněným složením).' : '.')));
   box.appendChild(el('p', 'widget-note', 'Popisný poměr, ne doporučená dávka ani změřená koncentrace v krvi.'));
+  const history = consumptionExposure();
+  box.appendChild(el('p', 'widget-note', history.count ? 'Historie za posledních ' + history.days + ' dní: ' + fmt(history.averageGrams) + ' g/den · ' + formatRelative(history.gramsPerKg) + ' g/kg/den. Průměr za ' + history.coveredDays + ' kalendářních dní od prvního záznamu v období včetně dneška; záznamy v ' + history.activeDays + ' dnech.' : 'Ve sledovaném období zatím nejsou dávky pro výpočet průměru.'));
 }
 function renderAppearanceSettings() {
   if (!S.ui?.appearance || !$('globalDensity')) return;
@@ -179,6 +185,8 @@ function drawLayout(page) {
     renderWidgetHead(node, key, page);
     node.hidden = layout.hidden.includes(key);
     node.classList.toggle('widget-compact', isCompactWidget(key, page));
+    const small = widgetConfig(key, page).size === 'small'; node.classList.toggle('widget-small', small);
+    if (small) renderSmallWidget(node, key);
     grid.appendChild(node);
   });
   const signature = JSON.stringify([S.ui.home.order, S.ui.home.hidden, S.ui.stats.order, S.ui.stats.hidden]);
@@ -272,6 +280,12 @@ function renderClearanceWidget() {
   if (config.showDetails && !isCompactWidget('clearance')) {
     const details = el('div', 'clearance-facts'); details.append(el('span', null, 'Teď ≈ ' + fmt(amount) + ' mg'), el('span', null, 'Poločas ' + S.set.hl + ' h')); box.appendChild(details);
   }
+  if (hasKnownComposition && config.showWeight !== false && getProfileWeight()) box.appendChild(el('p', 'weight-stat-note', 'Modelový zbytek / aktuální váha ' + fmt(getProfileWeight()) + ' kg: ≈ ' + formatRelative(amount / getProfileWeight()) + ' mg/kg mitragyninu. Není to koncentrace v krvi.'));
+  if (hasKnownComposition && !isCompactWidget('clearance') && config.showDecay !== false) {
+    const half = new Date(Date.now() + S.set.hl * 36e5);
+    box.appendChild(el('p', 'widget-note', 'Bez dalších dávek: za ' + fmt(S.set.hl) + ' h (' + half.toLocaleString('cs-CZ', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' }) + ') model klesne z ≈ ' + fmt(amount) + ' mg na ≈ ' + fmt(amount / 2) + ' mg' + (getProfileWeight() ? ' / ' + formatRelative(amount / 2 / getProfileWeight()) + ' mg/kg' : '') + '.'));
+  }
+  if (hasKnownComposition) box.appendChild(el('p', 'widget-note', 'Tolerance popisuje vnímaný účinek, nikoli rychlost vylučování. Váha mění přepočet na kg; z váhy samotné nelze určit osobní poločas.'));
   box.appendChild(el('p', 'widget-note', isCompactWidget('clearance') ? 'Odhad modelu, ne údaj o bezpečnosti nebo střízlivosti.' : 'Orientační matematický model. Neurčuje skutečné vyčištění, střízlivost ani bezpečný čas další dávky.'));
 }
 function currentDoses() { return S.doses.filter(d => Number.isFinite(d.g) && d.g > 0 && new Date(d.time).getTime() <= Date.now()); }
@@ -305,6 +319,7 @@ function applyQuickOptions() {
 }
 function renderWidgets() {
   if (!widgetSystemReady) return;
+  if (!isPrivateUnlocked()) return;
   if (!S.ui?.home?.config || !S.ui?.stats?.config) normalizeWidgetUI();
   applyAppearance();
   renderQuick();
@@ -312,7 +327,7 @@ function renderWidgets() {
   $('overviewDate').textContent = new Date().toLocaleDateString('cs-CZ', { weekday: 'long', day: 'numeric', month: 'long' });
   renderLimitWidget(); renderClearanceWidget(); renderWeightWidget(); renderLifetimeStatistics(); renderExtraWidgets(); applyQuickOptions();
   const gap = $('gapC'); if (!gap.children.length) { const p = el('div', 'limit-empty'); p.append(el('p', null, 'Nastav si vlastní připomínku odstupu. Není to výpočet bezpečné doby další dávky.')); const b = el('button', 'small-primary', 'Nastavit odstup'); b.onclick = () => openWidgetMenu('gap', 'home'); p.appendChild(b); gap.appendChild(p); }
-  drawLayout('home'); drawLayout('stats'); renderTodayComparisonButton(); renderConsumptionReview();
+  drawLayout('home'); drawLayout('stats'); renderTodayComparisonButton(); renderConsumptionReview(); renderLayoutProfiles();
 }
 
 function returnLiveEditors() {
@@ -354,6 +369,10 @@ function openWidgetMenu(key, page = 'home') {
   openWidgetSheet(meta.title, page === 'home' ? 'Widget v přehledu' : 'Karta statistik', body => {
     const config = widgetConfig(key, page), change = (property, value) => changeOption(key, page, property, value);
     body.appendChild(el('p', 'config-intro', meta.description));
+    if (key === 'clearance') {
+      addSwitch(body, 'Zbytek přepočítaný na váhu', config.showWeight !== false, v => change('showWeight', v), 'Používá aktuální váhu z osobního profilu.');
+      addSwitch(body, 'Výhled poklesu na polovinu', config.showDecay !== false, v => change('showDecay', v), 'V běžné velikosti karty, při zachování zadaného poločasu a bez dalších dávek.');
+    }
     if (widgetScope(key) === 'stats' && !['lifetime', 'forecast', 'weekly', 'level'].includes(key)) addSelect(body, 'Společné období statistik', dr, [[7, '7 dní'], [14, '14 dní'], [30, 'Měsíc'], [365, 'Rok']], value => { dr = +value; segs(); dataPage(); });
     if (key === 'quick') {
       addSelect(body, 'Krok tlačítek −/+', config.step, [[.1, '0,1 g'], [.5, '0,5 g'], [1, '1 g']], v => change('step', +v));
@@ -383,7 +402,8 @@ function openWidgetMenu(key, page = 'home') {
     else if (key === 'tolerance') actionButton(body, 'Otevřít osobní profil ↗', () => { closeWidgetSheet(); go('more'); });
     else body.appendChild(el('p', 'config-intro', page === 'stats' ? 'Období pro tuto kartu zvolíš nahoře ve Statistikách.' : 'Porovnání používá celé dny, aby dnešek nezkresloval výsledek.'));
     addSectionTitle(body, 'Vzhled a umístění');
-    addSwitch(body, 'Kompaktní karta', isCompactWidget(key, page), v => change('compact', v), 'Nižší karta, stručnější údaje a menší ovládací prvky.');
+    addSelect(body, 'Velikost widgetu', config.size || 'auto', [['auto', 'Podle nastavení a kompaktního režimu'], ['small', 'Malá · hlavní údaj'], ['standard', 'Běžná · všechny podrobnosti']], value => { change('size', value); openWidgetMenu(key, page); });
+    if (!config.size || config.size === 'auto') addSwitch(body, 'Kompaktní karta', isCompactWidget(key, page), v => change('compact', v), 'Nižší karta, stručnější údaje a menší ovládací prvky.');
     const visible = S.ui[page].order.filter(k => !S.ui[page].hidden.includes(k)), index = visible.indexOf(key), actions = el('div', 'config-move-actions');
     actionButton(actions, '↑ Posunout výše', () => { moveWidget(key, page, -1); openWidgetMenu(key, page); }, '', index <= 0);
     actionButton(actions, '↓ Posunout níže', () => { moveWidget(key, page, 1); openWidgetMenu(key, page); }, '', index < 0 || index === visible.length - 1);
@@ -396,6 +416,7 @@ function openWidgetMenu(key, page = 'home') {
 }
 function openWidgetCatalogue(page = 'home') {
   openWidgetSheet(page === 'home' ? 'Přidej si widget' : 'Karty statistik', 'Tvůj přehled. Tvoje pořadí.', body => {
+    actionButton(body, 'Moje uložená rozložení →', () => { closeWidgetSheet(); go('more'); renderLayoutProfiles(); $('layoutProfileName').focus(); });
     Object.entries({ ...WIDGET_CATALOGUE.home, ...WIDGET_CATALOGUE.stats }).forEach(([key, meta]) => {
       const added = S.ui[page].order.includes(key) && !S.ui[page].hidden.includes(key), row = el('button', 'catalogue-row' + (added ? ' is-added' : ''));
       const icon = el('span', 'widget-icon', meta.icon), label = el('span', 'catalogue-copy'); icon.dataset.tone = meta.tone;
@@ -461,7 +482,7 @@ $('profileRelativeOn').onchange = () => { S.profile.showRelative = $('profileRel
 $('profileSnapshotOn').onchange = () => { S.profile.snapshotWeight = $('profileSnapshotOn').checked; save(); };
 $('tl').oninput = () => { const value = $('tl').valueAsNumber; if (!Number.isInteger(value) || value < 1 || value > 10) { renderProfileSettings(); return; } S.profile.subjectiveTolerance = value; save(); renderProfileSettings(); };
 $('profileToleranceClear').onclick = () => { S.profile.subjectiveTolerance = null; save(); renderProfileSettings(); };
-$('globalDensity').onchange = () => { S.ui.appearance.density = $('globalDensity').value === 'compact' ? 'compact' : 'standard'; for (const page of ['home', 'stats']) Object.keys(S.ui[page].config).forEach(key => { S.ui[page].config[key].compact = null; }); save(); renderQuick(); renderWidgets(); };
+$('globalDensity').onchange = () => { S.ui.appearance.density = $('globalDensity').value === 'compact' ? 'compact' : 'standard'; for (const page of ['home', 'stats']) Object.keys(S.ui[page].config).forEach(key => { S.ui[page].config[key].compact = null; S.ui[page].config[key].size = 'auto'; }); save(); renderQuick(); renderWidgets(); };
 $('motionOn').onchange = () => { S.ui.appearance.motion = $('motionOn').checked; save(); applyAppearance(); };
 $('strongSeparatorsOn').onchange = () => { S.ui.appearance.strongSeparators = $('strongSeparatorsOn').checked; save(); applyAppearance(); };
 let headerTick = false;
@@ -507,11 +528,26 @@ function consumptionReview(now = new Date()) {
   const sum = a => a.reduce((s, d) => s + d.g, 0), ready = rows.some(d => d.time.slice(0, 10) <= key(-14)) && new Set(recent.map(d => d.time.slice(0, 10))).size >= 3 && new Set(prior.map(d => d.time.slice(0, 10))).size >= 3;
   return { ready, current: sum(recent) / 7, prior: sum(prior) / 7, ratio: sum(prior) > 0 ? sum(recent) / sum(prior) : null, date: key(0) };
 }
+function consumptionExposure() {
+  const days = [7, 14, 30].includes(S.profile.exposureDays) ? S.profile.exposureDays : 14;
+  const end = new Date(todayK() + 'T12:00'), start = new Date(end); start.setDate(start.getDate() - days + 1);
+  const startKey = iso(start).slice(0, 10), rows = currentDoses().filter(d => d.time.slice(0, 10) >= startKey);
+  const first = rows.map(d => d.time.slice(0, 10)).sort()[0];
+  // Calendar dates, not elapsed hours: daylight-saving changes do not add a day.
+  const coveredDays = first ? Math.min(days, Math.round((Date.parse(todayK() + 'T00:00Z') - Date.parse(first + 'T00:00Z')) / 864e5) + 1) : 0;
+  const grams = rows.reduce((s, d) => s + d.g, 0), weight = getProfileWeight();
+  return { days, coveredDays, grams, averageGrams: coveredDays ? grams / coveredDays : 0, gramsPerKg: weight && coveredDays ? grams / coveredDays / weight : null, activeDays: new Set(rows.map(d => d.time.slice(0, 10))).size, count: rows.length };
+}
 function renderConsumptionReview() {
   const anchor = $('profileToleranceClear'); if (!anchor) return;
   let box = $('consumptionReview');
   if (!box) { box = el('div'); box.id = 'consumptionReview'; anchor.parentElement.appendChild(box); }
   box.textContent = '';
+  const exposure = consumptionExposure();
+  addSectionTitle(box, 'Automatický přehled spotřeby');
+  box.appendChild(el('p', 'widget-note', exposure.count ? 'Za sledované období: ' + fmt(exposure.grams) + ' g / ' + exposure.count + ' záznamů. Průměr ' + fmt(exposure.averageGrams) + ' g/den' + (exposure.gramsPerKg !== null ? ' / ' + formatRelative(exposure.gramsPerKg) + ' g/kg/den při aktuální váze.' : '. Pro přepočet na kg zadej váhu.') + ' Počítáno za ' + exposure.coveredDays + ' kalendářních dní od prvního záznamu v období, včetně dní bez záznamu a dnešního neúplného dne.' : 'Zatím nejsou záznamy ve sledovaném období.'));
+  addSelect(box, 'Období automatického přehledu', exposure.days, [[7, '7 dní'], [14, '14 dní'], [30, '30 dní']], value => { S.profile.exposureDays = +value; save(); renderWidgets(); });
+  box.appendChild(el('p', 'widget-note', 'Tento přehled se počítá z uložených gramů. Vyjadřuje spotřebu vzhledem k váze, nikoli změřenou toleranci. Vyšší spotřeba sama neprokazuje slabší účinek.'));
   const trend = consumptionReview();
   box.appendChild(el('p', 'widget-note', trend.ready ? 'Referenční spotřeba: ' + fmt(trend.current) + ' g/den za posledních 7 celých dní; předtím ' + fmt(trend.prior) + ' g/den. Poměr ' + fmt(trend.ratio) + '×.' + (getProfileWeight() ? ' Nyní ' + formatRelative(trend.current / getProfileWeight()) + ' g/kg/den.' : '') : 'Pro trend potřebujeme 14 dní historie a alespoň 3 dny se záznamem v každém týdnu.'));
   box.appendChild(el('p', 'widget-note', 'Doporučené číslo tolerance nelze z gramů ani váhy spolehlivě určit. Hodnocení 1–10 vyplň podle vlastní zkušenosti. Trend spotřeby jej automaticky nemění.'));
@@ -519,6 +555,7 @@ function renderConsumptionReview() {
   addSelect(box, 'Upozornit při změně alespoň', S.profile.consumptionThreshold === 50 ? 50 : 25, [[25, '25 %'], [50, '50 %']], value => { S.profile.consumptionThreshold = +value; save(); });
 }
 function maybeSuggestConsumptionReview() {
+  if (!isPrivateUnlocked()) return;
   if (!widgetSystemReady || S.profile.consumptionAlerts === false) return;
   const trend = consumptionReview(), threshold = S.profile.consumptionThreshold === 50 ? .5 : .25;
   const last = new Date(S.profile.consumptionReviewAt || 0).getTime();
@@ -533,7 +570,8 @@ function maybeSuggestConsumptionReview() {
 normalizeWidgetUI();
 range = widgetConfig('trend').range; metric = widgetConfig('trend').metric;
 widgetSystemReady = true;
-bootPanda();
+initLibrary();
+initCover();
 if (IS_PREVIEW) { $('previewBadge').hidden = false; document.documentElement.classList.add('is-preview'); }
 renderWidgets();
 setTimeout(maybeSuggestConsumptionReview, 1200);

@@ -8,21 +8,31 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="PandaUI">
-<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#0b1120" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b1120" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" sizes="180x180" href="icon-180.png">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <title>PandaUI</title>
-<link rel="stylesheet" href="assets/app.css"><link rel="stylesheet" href="assets/widgets.css"><link rel="stylesheet" href="assets/ios.css">
-</head>
-<body>
-<header class="appbar"><div class="appbar-inner"><div class="appbar-name"><img src="icon.svg" alt="" width="24" height="24"><span>PandaUI</span><span class="preview-version">2.1</span></div><div class="appbar-right"><span class="preview-badge" id="previewBadge" hidden>Náhled · ukázková data</span><span class="connection-pill" id="connectionState"><i></i><span>Online</span></span></div></div></header>
+<link rel="stylesheet" href="assets/app.css"><link rel="stylesheet" href="assets/widgets.css"><link rel="stylesheet" href="assets/ios.css"><link rel="stylesheet" href="assets/library.css"><link rel="stylesheet" href="assets/cover.css">
+<style>#privateApp[hidden],#coverDialog[hidden],#gameShell[hidden]{display:none!important}.cover-locked{margin:0;background:#0b1120}.cover-locked #privateApp{display:none!important}</style></head>
+<body class="cover-locked"><section id="gameShell" class="stack-shell" aria-label="Tower Shift">
+<header class="stack-header"><button id="stackPanda" class="stack-panda" aria-label="Panda" type="button"><img src="assets/stack-mark.svg" alt="" width="36" height="36"></button><div><h1>Tower Shift</h1><p>Postav něco velkého.</p></div><button id="stackHelp" class="stack-help" aria-label="Jak hrát">?</button></header>
+<div class="stack-scores"><div><span>Skóre</span><strong id="stackScore">0</strong></div><div><span>Rekord</span><strong id="stackBest">0</strong></div></div>
+<div class="tower-toolbar"><button id="towerWorkshop">◈ Dílna <span id="towerCoins">0</span></button><span id="towerShield"></span></div><div class="stack-progress"><div><span id="stackLevel">Najdi svůj rytmus</span><strong id="stackFloors">0 pater</strong></div><button id="stackPause" aria-label="Pozastavit hru" disabled>Ⅱ</button></div><div class="stack-board"><span class="stack-sky-dot dot-a"></span><span class="stack-sky-dot dot-b"></span><canvas id="stackCanvas" width="640" height="860" tabindex="0" aria-label="Hrací plocha. Tlačítkem Položit blok zastavíš pohybující se dílek."></canvas><div class="stack-message" id="stackMessage"><span class="stack-eyebrow">MALÝ BLOK. VELKÁ VĚŽ.</span><h2 id="stackMessageTitle">Najdi svůj rytmus.</h2><p id="stackMessageText">Pokládej bloky na sebe. Přesah se odřízne.</p></div><div class="stack-perfect" id="stackPerfect" role="status" hidden>Přesně!</div></div>
+<div id="stackCombo" class="stack-combo">Přesnost se vyplácí</div><p id="stackStatus" class="stack-status" aria-live="polite">Jedno klepnutí. Další patro.</p><button id="stackPlay" class="stack-play">Hrát</button><button id="stackNew" class="stack-new" hidden>Nová hra</button><footer class="stack-footer">PandaUI · 2.2.1</footer>
+</section><section id="coverDialog" class="cover-dialog" role="dialog" aria-modal="true" aria-labelledby="coverDialogTitle" hidden><div class="cover-dialog-card"><button id="coverDialogClose" class="cover-close" aria-label="Zavřít">×</button><h2 id="coverDialogTitle">PandaUI</h2><p id="coverDialogText"></p><form id="coverPinForm" hidden><label class="cover-field"><span id="coverPinLabel">PIN</span><input id="coverPin" type="password" inputmode="numeric" pattern="[0-9]*" minlength="4" maxlength="8" autocomplete="off"></label><label class="cover-field" id="coverPinRepeatField" hidden><span>Zopakuj PIN</span><input id="coverPinRepeat" type="password" inputmode="numeric" pattern="[0-9]*" minlength="4" maxlength="8" autocomplete="off"></label><p id="coverPinError" role="status"></p><button class="stack-play" id="coverPinSubmit" type="submit">Pokračovat</button></form><div id="towerShop" hidden></div><div id="stackHelpBody" hidden><p>Klepni na Položit blok, když je pohybující se dílek nad věží. Přesah se odřízne. Přesné položení přidá bod navíc. Sérií přesných zásahů získáš až 5 bodů za blok. Každých pět pater dostane věž značku výšky. Jakmile mineš, partie končí.</p><label class="cover-vibration">Jemné vibrace<input type="checkbox" id="stackVibration"></label><p>Rozehraná partie a rekord se ukládají v tomto zařízení. Funguje i bez připojení po prvním načtení aplikace.</p></div></div></section><div id="privateApp" hidden inert>
+<header class="appbar"><div class="appbar-inner"><div class="appbar-name"><img src="icon.svg" alt="" width="24" height="24"><span>PandaUI</span><span class="preview-version">2.2.1</span></div><div class="appbar-right"><button id="coverQuickHide" class="cover-quick-hide" aria-label="Zamknout a vrátit se do hry"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 14v3"/></svg></button><span class="preview-badge" id="previewBadge" hidden>Náhled · ukázková data</span><span class="connection-pill" id="connectionState"><i></i><span>Online</span></span></div></div></header>
 <main>
 
 <section class="page" id="p-log">
 <button class="lk history-back" onclick="go('sum')">‹ Přehled</button><div class="top"><h1>Historie</h1><button class="plus" id="addD" aria-label="Přidat dávku">+</button></div>
-<div id="log"></div>
+<div class="history-tools shop-card">
+<label class="library-field"><span>Hledat v historii</span><input id="historySearch" type="search" placeholder="Druh, poznámka nebo souvislost" autocomplete="off"></label>
+<div class="library-fields"><label class="library-field"><span>Druh</span><select id="historyStrain"></select></label><label class="library-field"><span>Období</span><select id="historyRange"><option value="all">Celá historie</option><option value="7">Posledních 7 dní</option><option value="30">Posledních 30 dní</option><option value="90">Posledních 90 dní</option></select></label></div>
+<div class="history-filter-status"><span id="historySelectedDay">Všechny dny</span><button class="inline-link" id="historyClearDay" hidden>Zrušit den</button><button class="inline-link" id="historyReset">Zrušit filtry</button></div>
+<label class="config-switch"><span>Zobrazovat kalendář</span><input id="historyCalendarOn" class="sw" type="checkbox" checked></label>
+</div><div class="shop-card" id="historyCalendarCard"><div class="calendar-navigation"><button id="historyPrevMonth" aria-label="Předchozí měsíc">‹</button><strong id="historyMonthTitle"></strong><button id="historyNextMonth" aria-label="Následující měsíc">›</button></div><div id="historyCalendar" class="history-calendar" role="group" aria-label="Kalendář dávek"></div><button class="inline-link" id="historyThisMonth">Tento měsíc</button><p class="widget-note">Klepni na den pro jeho záznamy, opětovným klepnutím výběr zrušíš. Součty respektují filtry. Pomlčka znamená bez záznamu.</p></div><p id="historyResults" class="library-results" role="status"></p><div id="log"></div>
 </section>
 
 <section class="page" id="p-sum" hidden>
@@ -69,7 +79,7 @@
 <div class="top"><h1>Nákup</h1><span class="page-badge">Moje evidence</span></div>
 <p class="intro">Tvoje balení a výdaje. Vlastní nákupní deník.</p>
 <div class="purchase-summary-heading"><span>Tvoje nákupy celkem</span><button class="widget-menu-button" onclick="openPurchaseSummaryOptions()" aria-label="Upravit přehled nákupů">•••</button></div><div class="purchase-summary" id="purchaseSummary"></div>
-<p class="purchase-note" id="purchaseBalanceNote"></p>
+<p class="purchase-note" id="purchaseBalanceNote"></p><div class="shop-card"><div class="quick-heading"><h2>Ceny a měsíční výdaje</h2></div><label class="library-field"><span>Měsíc nákupů</span><input type="month" id="purchaseMonth"></label><div id="purchaseAnalytics"></div></div>
 <div class="shop-card"><div class="quick-heading"><h2>Přidat balení</h2><button class="widget-menu-button" onclick="openPurchaseOptions()" aria-label="Upravit velikosti balení a nákup">•••</button></div>
 <label class="quick-strain"><span>Druh</span><select id="buyStrain" aria-label="Nakoupený druh"></select><span class="select-chevron" aria-hidden="true">⌄</span></label>
 <div class="shop-label">Velikost jednoho balení</div><div class="package-options" id="packageOptions"></div>
@@ -123,7 +133,7 @@
 <div class="grp" id="plN"></div>
 </section>
 
-<section class="page" id="p-more" hidden><div class="top"><h1>Nastavení</h1></div><p class="intro">Uprav si deník podle sebe.</p><div class="settings-stack"><div class="settings-group personal-profile"><div class="settings-heading"><span class="settings-icon">◉</span><span class="settings-title"><strong>Osobní profil</strong><span>Váha a přepočty ve statistikách</span></span></div><div class="settings-body">
+<section class="page" id="p-more" hidden><div class="top"><h1>Nastavení</h1></div><p class="intro">Uprav si deník podle sebe.</p><div class="settings-stack"><div class="settings-group"><div class="settings-heading"><span class="settings-icon">🐼</span><span class="settings-title"><strong>Úvodní hra a soukromí</strong><span>Verze 2.2.1</span></span></div><div class="settings-body"><p class="profile-help">Po otevření se zobrazí Tower Shift. Pro přístup podrž logo nahoře 3 sekundy a zadej PIN. Při přepnutí do jiné aplikace se přehled ihned skryje. Tlačítko zámku v horní liště ho skryje i ručně.</p><label class="f"><span>Zamknout při nečinnosti</span><select id="coverIdle"><option value="15">Po 15 sekundách</option><option value="60">Po minutě</option><option value="300">Po 5 minutách</option></select></label><button class="settings-context-link" id="coverChangePin"><span>Změnit přístupový PIN</span><span>Ověřit a změnit ›</span></button><button class="settings-context-link" id="coverReturn"><span>Zamknout a vrátit se do hry</span><span>Ihned skrýt přehled ›</span></button><p class="profile-help">PIN a skrytí obrazovky chrání před běžným nahlédnutím. Uložené záznamy nejsou šifrované. Nezapomeň PIN a dál zálohuj svá data.</p></div></div><div class="settings-group personal-profile"><div class="settings-heading"><span class="settings-icon">◉</span><span class="settings-title"><strong>Osobní profil</strong><span>Váha a přepočty ve statistikách</span></span></div><div class="settings-body">
 <label class="f"><span>Moje váha (kg)</span><input type="number" id="kg" min="30" max="250" step="0.1" inputmode="decimal" placeholder="Zadej váhu"></label><p class="profile-weight-state" id="profileWeightState"></p>
 <label class="f"><span>Přepočty na kg</span><input class="sw" type="checkbox" id="profileRelativeOn"></label>
 <label class="f"><span>Ukládat váhu k novým dávkám</span><input class="sw" type="checkbox" id="profileSnapshotOn"></label>
@@ -132,7 +142,7 @@
 <button class="settings-context-link" onclick="openWidgetMenu('tolerance','home')"><span>Spotřeba podle váhy</span><span>Otevřít widget ›</span></button></div></div><div class="settings-group"><div class="settings-heading"><span class="settings-icon">▦</span><span class="settings-title"><strong>Rozložení a ovládání</strong><span>Widgety, velikost karet a animace</span></span></div><div class="settings-body">
 <label class="f"><span>Velikost všech karet</span><select id="globalDensity"><option value="standard">Běžná</option><option value="compact">Kompaktní</option></select></label>
 <p class="profile-help">Změní všechny karty. Jednotlivou kartu můžeš potom upravit přes tři tečky.</p>
-<label class="f"><span>Animace a přesuny</span><input class="sw" type="checkbox" id="motionOn"></label>
+<div class="layout-profile-settings"><h3>Moje rozložení</h3><p class="profile-help">Ulož si pořadí, umístění, velikosti a nastavení karet obou stránek. Můžeš mít až 6 variant. Záznamy dávek a nákupů se tím nemění.</p><label class="library-field"><span>Název rozložení</span><input id="layoutProfileName" type="text" maxlength="32" placeholder="Např. Jednoduchý přehled"></label><button id="layoutProfileSave" class="config-action">Uložit nové rozložení</button><label class="library-field"><span>Uložená rozložení</span><select id="layoutProfileSelect"></select></label><button id="layoutProfileApply" class="config-action">Použít vybrané rozložení</button><button id="layoutProfileUpdate" class="config-action">Přepsat vybrané aktuálním rozložením</button><button id="layoutProfileDelete" class="config-action destructive">Smazat vybrané rozložení</button></div><label class="f"><span>Animace a přesuny</span><input class="sw" type="checkbox" id="motionOn"></label>
 <label class="f"><span>Výraznější oddělovače</span><input class="sw" type="checkbox" id="strongSeparatorsOn"></label>
 <button class="settings-context-link" onclick="editPageLayout('home')"><span>Upravit přehled</span><span>Přesuny a skrytí ›</span></button>
 <button class="settings-context-link" onclick="openWidgetCatalogue('home')"><span>Spravovat widgety</span><span>Přidat nebo vrátit ›</span></button>
@@ -165,7 +175,7 @@
 <button class="cell" id="tpR" style="color:var(--acc);justify-content:center" hidden>Začít plán znovu od dneška</button>
 </div>
 <p class="cap" id="tpD" style="display:block;line-height:1.4"></p>
-</div></div><div class="settings-group"><div class="settings-heading"><span class="settings-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-8 9-8 9s-8-4-8-9V6z"/></svg></span><span class="settings-title"><strong>Soukromí</strong><span>Zámek aplikace pomocí PINu</span></span></div><div class="settings-body">
+</div></div><div class="settings-group" id="legacyPinSettings" hidden><div class="settings-heading"><span class="settings-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-8 9-8 9s-8-4-8-9V6z"/></svg></span><span class="settings-title"><strong>Soukromí</strong><span>Zámek aplikace pomocí PINu</span></span></div><div class="settings-body">
 <div class="grp">
 <label class="f"><span>Zámek PINem</span><input type="checkbox" class="sw" id="pnOn"></label>
 <button class="cell" id="pnCh" style="color:var(--acc);justify-content:center" hidden>Změnit PIN</button>
@@ -183,7 +193,7 @@
 <div class="f"><span id="recT"></span><button class="chip" id="recB">Použít</button></div>
 </div>
 
-</div></div></div></div><div class="pwa-state" id="pwaState" role="status">Offline režim se připravuje při prvním otevření online.</div><p class="settings-footer"><strong>PandaUI</strong><br><span class="app-version">Verze 2.1.0</span><br>Změny se ukládají automaticky do tohoto prohlížeče.</p></section>
+</div></div></div></div><div class="pwa-state" id="pwaState" role="status">Offline režim se připravuje při prvním otevření online.</div><p class="settings-footer"><strong>PandaUI</strong><br><span class="app-version">Verze 2.2.1</span><br>Změny se ukládají automaticky do tohoto prohlížeče.</p></section>
 
 </main><div id="widgetControlStash" hidden><div id="presetEditorLive"><div class="preset-settings"><div class="settings-label">Rychlé volby v gramech</div><p class="purchase-note">Každou volbu uprav zvlášť. Změny se uloží automaticky.</p><div id="presetList"></div><div class="preset-add"><input id="presetNew" type="number" min="0.1" max="200" step="0.1" inputmode="decimal" aria-label="Nová rychlá volba v gramech" placeholder="Nová hodnota (g)"><button id="presetAdd">＋ Přidat</button></div></div>
 </div><div id="halfLifeEditorLive"><label class="f"><span>Poločas (hodiny)</span><input type="number" id="hl" min="6" max="72" inputmode="numeric"></label></div><div id="limitEditorLive"><label class="f"><span>Zapnout limit</span><input type="checkbox" class="sw" id="limOn"></label>
@@ -228,6 +238,6 @@
 </div>
 </div>
 
-<script src="assets/core.js"></script><script src="assets/widgets.js"></script>
+</div><script src="assets/core.js"></script><script src="assets/cover.js"></script><script src="assets/library.js"></script><script src="assets/widgets.js"></script>
 </body>
 </html>

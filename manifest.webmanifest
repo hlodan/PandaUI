@@ -2,13 +2,13 @@
   "id": "./",
   "name": "PandaUI",
   "short_name": "PandaUI",
-  "description": "Osobní deník spotřeby a nákladů",
+  "description": "Malá hra se stavěním věže",
   "lang": "cs",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f2f2f7",
-  "theme_color": "#248a3d",
+  "background_color": "#0b1120",
+  "theme_color": "#0b1120",
   "icons": [
     {
       "src": "icon-192.png",
