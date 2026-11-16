@@ -1,9 +1,11 @@
-# PandaUI 2.3.0
+# PandaUI 2.3.2
 
-Neutrální úvod s přístupem po podržení loga na 3 sekundy a zadání původního PINu. Úvodní hra byla odstraněná. Zámek a automatické zamčení zůstávají; osobní záznamy nejsou šifrované.
+Barevně rozlišené karty, sjednocené ikony a ovládání, větší množství s jednotkou g a výrazné rychlé volby. Barevné rozlišení widgetů lze přepnout v Nastavení.
 
-Sjednocené tmavé rozhraní, zápis dávky přímo na přehledu (druh, čas, žaludek, tlačítka −/+ a rychlá množství), oprava dvojího zápisu, viditelná série v limitu a průměr spotřeby za celou historii. Nákupy zůstávají oddělené od spotřeby. Widgety a uložená rozložení zůstávají dostupné.
+Neutrální úvod s přístupem po podržení loga na 3 sekundy a zadání původního PINu. Zámek a automatické zamčení zůstávají; úvodní hra je odstraněná. Záznamy nejsou šifrované.
 
-Váha se používá pro popisné přepočty na kg. Modelové odbourávání neurčuje skutečnou koncentraci ani čas odeznění účinků. Osobní hodnocení tolerance nemění množství ani poločas.
+Zápis dávky je přímo na přehledu (druh, čas, žaludek, −/+ a rychlé volby). Po uložení se množství vyčistí proti nechtěnému dvojímu zápisu. Série v limitu, celkový denní průměr, kalendář, vlastní rozložení widgetů a nákupní statistiky zůstávají. Nákupy jsou oddělené od spotřeby.
 
-Verze je definovaná v version.json. Pro další vydání se zvyšuje verze i označení offline souborů, poté se spouští scripts/build-widget-preview.cjs. Publikují se pouze produkční index, manifest, ikony, sw.js, version.json a běhové soubory assets; náhledy, preview-data.js, zálohy a osobní data se nezveřejňují. Původní úložiště kratom-denik-v1 a bp i adresa webu zůstávají zachované.
+U osobního hodnocení tolerance je trend spotřeby a připomenutí k přehodnocení. Z gramů se neodvozuje změřená osobní tolerance a vlastní hodnocení nemění modelový poločas. Váha slouží k popisným přepočtům na kg. Model neurčuje střízlivost ani bezpečný čas další dávky.
+
+Verze je definovaná v version.json. Pro vydání se zvyšuje verze a označení offline souborů a spouští scripts/build-widget-preview.cjs. Publikují se pouze produkční soubory a běhové assets; náhledy, preview-data.js, zálohy a osobní data se nezveřejňují. Původní adresa i úložiště kratom-denik-v1 a bp jsou zachované.

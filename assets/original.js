@@ -33,6 +33,9 @@ renderQuick = function () { originalRenderQuickBase(); if (typeof widgetSystemRe
 function renderOriginalUI() {
   if (!isPrivateUnlocked() || !$('originalQuickTime')) return;
   migrateOriginalLayout();
+  renderRefinedIcons();
+  document.documentElement.classList.toggle('quiet-colors', S.ui.appearance.colorCards === false);
+  if ($('colorCardsOn')) { $('colorCardsOn').checked = S.ui.appearance.colorCards !== false; $('colorCardsOn').onchange = () => { S.ui.appearance.colorCards = $('colorCardsOn').checked; save(); renderWidgets(); }; }
   if (!originalQuickTime) originalQuickTime = iso(new Date());
   $('originalQuickTime').value = originalQuickTime;
   $('originalQuickTime').onchange = () => { originalQuickTime = $('originalQuickTime').value; };
@@ -40,7 +43,8 @@ function renderOriginalUI() {
   $('quickSave').textContent = 'Zapsat dávku';
   const L = limit(), over = L && dayG(todayK()) + quickGrams > L.g;
   $('quickSave').classList.toggle('original-over-limit', !!over);
-  $('originalDoseInfo').textContent = quickGrams > 0 ? fmt(quickGrams) + ' g' + (over ? ' · překročí nastavený denní limit' : '') : 'Zadej množství';
+  $('originalDoseInfo').textContent = quickGrams > 0 ? (over ? 'Překročí nastavený denní limit' : 'Připraveno k zápisu') : 'Vyber množství';
+  $('originalDoseInfo').classList.toggle('is-warning',!!over);
   const streak = originalStreak();
   $('originalHeaderStreak').textContent = 'Série · ' + dayLabel(streak.current); $('originalHeaderStreak').setAttribute('aria-label', 'Série v limitu: ' + streak.current + ' dokončených dní');
   polishModelCard();
@@ -62,6 +66,10 @@ function renderOriginalUI() {
   renderOriginalLifetime();
 }
 function dayLabel(n){return n+' '+(n===1?'den':n>=2&&n<=4?'dny':'dní');}
+function renderRefinedIcons(){
+  const paths={limit:'<path d="M5 17a8 8 0 1 1 14 0M12 12l4-4M5 17h14"/>',clearance:'<circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/>',quick:'<rect x="5" y="4" width="14" height="16" rx="4"/><path d="M12 8v8M8 12h8"/>',recent:'<path d="M4 10a8 8 0 1 1 1 7M4 5v5h5M12 7v5l3 2"/>',lifetime:'<path d="M4 18V9M9 18V5M14 18v-7M19 18V7"/>',purchases:'<path d="M4 6h2l2 11h10l2-8H7M10 21h.01M17 21h.01"/>',forecast:'<path d="M4 17l5-6 4 3 7-9M15 5h5v5"/>'};
+  for(const [key,path]of Object.entries(paths)){const icon=widgetNode(key)?.querySelector('.widget-icon');if(icon&&icon.dataset.refined!=='1'){icon.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+path+'</svg>';icon.dataset.refined='1';}}
+}
 function polishModelCard(){
   const box=$('hero');if(!box||box.querySelector('.model-info-action'))return;
   const notes=[...box.querySelectorAll('.widget-note')],weight=box.querySelector('.weight-stat-note'),text=notes.map(n=>n.textContent);if(weight)text.push(weight.textContent);

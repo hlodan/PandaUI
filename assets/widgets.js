@@ -66,7 +66,7 @@ function normalizeWidgetUI() {
   all.forEach(k => { if (!assigned.has(k)) { const page = widgetScope(k); layouts[page].order.push(k); if (DEFAULT_LAYOUT[page].hidden.includes(k)) layouts[page].hidden.push(k); } });
   const purchase = previous.purchase || {};
   const sizes = [...new Set((Array.isArray(purchase.sizes) ? purchase.sizes : [25, 50, 100, 250]).map(Number).filter(g => Number.isFinite(g) && g > 0 && g <= 100000))].slice(0, 8);
-  S.ui = { ...previous, schema: 2, ...layouts, appearance: { density: previous.appearance?.density === 'compact' ? 'compact' : 'standard', motion: previous.appearance?.motion !== false, strongSeparators: !!previous.appearance?.strongSeparators }, purchase: { sizes, showCounts: purchase.showCounts !== false, compactCart: !!purchase.compactCart, historyOrder: purchase.historyOrder === 'oldest' ? 'oldest' : 'newest', historyCount: [0, 5, 10, 20].includes(purchase.historyCount) ? purchase.historyCount : 10 } };
+  S.ui = { ...previous, schema: 2, ...layouts, appearance: { density: previous.appearance?.density === 'compact' ? 'compact' : 'standard', motion: previous.appearance?.motion !== false, colorCards: previous.appearance?.colorCards !== false, strongSeparators: !!previous.appearance?.strongSeparators }, purchase: { sizes, showCounts: purchase.showCounts !== false, compactCart: !!purchase.compactCart, historyOrder: purchase.historyOrder === 'oldest' ? 'oldest' : 'newest', historyCount: [0, 5, 10, 20].includes(purchase.historyCount) ? purchase.historyCount : 10 } };
   if (IS_PREVIEW && !(previous.schema >= 2)) { try { localStorage.setItem(TK, 'dark'); applyTheme('dark'); } catch {} }
   normalizePersonalProfile();
   const q = S.ui.home.config.quick;
@@ -549,6 +549,14 @@ function renderConsumptionReview() {
   addSelect(box, 'Období automatického přehledu', exposure.days, [[7, '7 dní'], [14, '14 dní'], [30, '30 dní']], value => { S.profile.exposureDays = +value; save(); renderWidgets(); });
   box.appendChild(el('p', 'widget-note', 'Tento přehled se počítá z uložených gramů. Vyjadřuje spotřebu vzhledem k váze, nikoli změřenou toleranci. Vyšší spotřeba sama neprokazuje slabší účinek.'));
   const trend = consumptionReview();
+  const panel=el('div','tolerance-trend-panel');
+  panel.appendChild(el('span','trend-panel-label','Automatický přehled pro hodnocení tolerance'));
+  panel.appendChild(el('strong','trend-panel-value',trend.ready?(trend.ratio>=1?'+':'')+fmt((trend.ratio-1)*100)+' %':'Zatím málo historie'));
+  panel.appendChild(el('p',null,trend.ready?'Změna gramů za posledních 7 celých dní proti předchozím 7 dnům.':'Pro porovnání jsou potřeba dvě sledovaná období.'));
+  panel.appendChild(el('span','trend-self-rating','Tvoje hodnocení: '+(S.profile.subjectiveTolerance?S.profile.subjectiveTolerance+' / 10':'nezadané')));
+  if(trend.ready&&Math.abs(trend.ratio-1)>=(S.profile.consumptionThreshold===50?.5:.25)){panel.appendChild(el('p','trend-next-step','Doporučený krok: znovu posoudit, jestli stejné množství působí slaběji než dříve.'));actionButton(panel,'Přejít na vlastní hodnocení',()=>{$('tl').focus();$('tl').scrollIntoView({behavior:'smooth',block:'center'});});}
+  panel.appendChild(el('small',null,'Trend gramů není změřený stupeň tolerance a nemění odhad odbourávání.'));
+  box.appendChild(panel);
   box.appendChild(el('p', 'widget-note', trend.ready ? 'Referenční spotřeba: ' + fmt(trend.current) + ' g/den za posledních 7 celých dní; předtím ' + fmt(trend.prior) + ' g/den. Poměr ' + fmt(trend.ratio) + '×.' + (getProfileWeight() ? ' Nyní ' + formatRelative(trend.current / getProfileWeight()) + ' g/kg/den.' : '') : 'Pro trend potřebujeme 14 dní historie a alespoň 3 dny se záznamem v každém týdnu.'));
   box.appendChild(el('p', 'widget-note', 'Doporučené číslo tolerance nelze z gramů ani váhy spolehlivě určit. Hodnocení 1–10 vyplň podle vlastní zkušenosti. Trend spotřeby jej automaticky nemění.'));
   addSwitch(box, 'Upozornit na změnu spotřeby', S.profile.consumptionAlerts !== false, value => { S.profile.consumptionAlerts = value; save(); }, 'Nabídne znovu posoudit vlastní hodnocení tolerance.');
