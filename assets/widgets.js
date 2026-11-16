@@ -262,7 +262,7 @@ function renderLimitWidget() {
   meter.setAttribute('role', 'meter'); meter.setAttribute('aria-label', 'Dnešní spotřeba vůči limitu'); meter.setAttribute('aria-valuemin', '0'); meter.setAttribute('aria-valuemax', String(Math.max(L.g, used, 1))); meter.setAttribute('aria-valuenow', String(used));
   const foot = el('div', 'limit-footer'); foot.appendChild(el('span', null, over ? 'O ' + fmt(used - L.g) + ' g nad tvou hranicí' : 'Zbývá ' + fmt(remaining) + ' g do vlastního limitu')); if (!compact) foot.appendChild(el('strong', null, Math.round(ratio * 100) + ' %'));
   box.append(main, meter, foot);
-  if (!compact && widgetConfig('limit').showStreak) { const streak = streaks(); if (streak) box.appendChild(el('p', 'widget-note', 'Série v limitu: ' + streak.cur + ' dní · rekord ' + streak.best + ' dní')); }
+  // The original-style badge is rendered in every card size by renderOriginalUI.
 }
 function renderClearanceWidget() {
   const box = $('hero'), amount = inBody(), config = widgetConfig('clearance'); box.textContent = ''; box.className = 'clearance-widget';
@@ -327,7 +327,7 @@ function renderWidgets() {
   $('overviewDate').textContent = new Date().toLocaleDateString('cs-CZ', { weekday: 'long', day: 'numeric', month: 'long' });
   renderLimitWidget(); renderClearanceWidget(); renderWeightWidget(); renderLifetimeStatistics(); renderExtraWidgets(); applyQuickOptions();
   const gap = $('gapC'); if (!gap.children.length) { const p = el('div', 'limit-empty'); p.append(el('p', null, 'Nastav si vlastní připomínku odstupu. Není to výpočet bezpečné doby další dávky.')); const b = el('button', 'small-primary', 'Nastavit odstup'); b.onclick = () => openWidgetMenu('gap', 'home'); p.appendChild(b); gap.appendChild(p); }
-  drawLayout('home'); drawLayout('stats'); renderTodayComparisonButton(); renderConsumptionReview(); renderLayoutProfiles();
+  drawLayout('home'); drawLayout('stats'); renderTodayComparisonButton(); renderConsumptionReview(); renderLayoutProfiles(); renderOriginalUI();
 }
 
 function returnLiveEditors() {
@@ -371,7 +371,7 @@ function openWidgetMenu(key, page = 'home') {
     body.appendChild(el('p', 'config-intro', meta.description));
     if (key === 'clearance') {
       addSwitch(body, 'Zbytek přepočítaný na váhu', config.showWeight !== false, v => change('showWeight', v), 'Používá aktuální váhu z osobního profilu.');
-      addSwitch(body, 'Výhled poklesu na polovinu', config.showDecay !== false, v => change('showDecay', v), 'V běžné velikosti karty, při zachování zadaného poločasu a bez dalších dávek.');
+      addSwitch(body, 'Výhled poklesu na polovinu', config.showDecay !== false, v => change('showDecay', v), 'V podrobnostech O výpočtu, při zachování zadaného poločasu a bez dalších dávek.');
     }
     if (widgetScope(key) === 'stats' && !['lifetime', 'forecast', 'weekly', 'level'].includes(key)) addSelect(body, 'Společné období statistik', dr, [[7, '7 dní'], [14, '14 dní'], [30, 'Měsíc'], [365, 'Rok']], value => { dr = +value; segs(); dataPage(); });
     if (key === 'quick') {
